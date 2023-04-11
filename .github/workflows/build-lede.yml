@@ -14,7 +14,7 @@ on:
   push:
     # branches: [ master ]
     paths:
-      - '.config'
+      - 'lede.config'
   repository_dispatch:
   workflow_dispatch:
     inputs:
