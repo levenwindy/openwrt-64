@@ -70,6 +70,7 @@ jobs:
         git clone  https://github.com/NueXini/NueXini_Packages openwrt/package/NueXini_Packages
         git clone https://github.com/coolsnowwolf/lede lede
         cp -r lede/package/lean/r8125 openwrt/package/NueXini_Packages/
+        rm -rf lede
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Load custom feeds
