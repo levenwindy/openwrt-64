@@ -67,7 +67,7 @@ jobs:
       run: |
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
-        ls -al
+        ls -al openwrt/
         sed -i 's/luci-theme-bootstrap/luci-theme-argon/' openwrt/feeds/luci/collections/luci/Makefile
         cat openwrt/feeds/luci/collections/luci/Makefile
         sleep 999
