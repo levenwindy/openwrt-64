@@ -60,8 +60,6 @@ jobs:
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
-        whoami 
-        sudo useradd op
 
     - name: Clone source code 
       working-directory: /workdir
