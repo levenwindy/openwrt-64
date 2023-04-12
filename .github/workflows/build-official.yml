@@ -122,7 +122,8 @@ jobs:
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
-        useradd op
+        whoami 
+        sudo useradd op
         su op
         make -j2 || make -j1 V=s
         echo "::set-output name=status::success"
