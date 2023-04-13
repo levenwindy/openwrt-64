@@ -47,6 +47,18 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
+    - name: Login To DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PWD }}
+        
+    - name: TEST $GITHUB_WORKSPACE
+      run: |
+        ls $GITHUB_WORKSPACE
+        ls openwrt
+        cd $GITHUB_WORKSPACE && pwd
+        
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -131,3 +143,28 @@ jobs:
         name: OpenWrt
         path: openwrt/bin/targets/
 
+
+    
+    - name: TEST
+      run: |
+        cd openwrt && ls
+        cd bin && ls
+        cd targets && ls
+        cd x86 && ls
+        cd 64 && ls
+    
+    - name: Build Mini RootFS
+      run: |
+        cd openwrt
+        cp bin/targets/x86/64/*rootfs.tar.gz $GITHUB_WORKSPACE
+        ls $GITHUB_WORKSPACE
+        
+    - name: Build & Push  Image (Default)
+      uses: docker/build-push-action@v2
+      with:
+        platforms: ${{ env.DOCKER_IMAGE_ARCH }}
+        file: Dockerfile
+        context: .
+        push: true
+        tags: |
+          ${{ secrets.DOCKERHUB_USERNAME }}/openwrt:x86_64_lede
