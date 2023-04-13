@@ -24,6 +24,6 @@ sed -i "/exit 0/i\uci set network.lan.dns='192.168.1.1'" feeds/small8/.github/di
 sed -i "/exit 0/i\uci commit network" feeds/small8/.github/diy/zzz-default-settings
 
 # 添加NueXini_Packages 源
-mkdir -p package/other
-cd package/other
-git clone  https://github.com/NueXini/NueXini_Packages
+# mkdir -p package/other
+#cd package/other
+ #git clone  https://github.com/NueXini/NueXini_Packages
