@@ -138,7 +138,7 @@ jobs:
         cd x86 && ls
         cd 64 && ls
     
-    - name: Build Mini RootFS
+    - name: Build Mini 
       run: |
         cd openwrt
         cp bin/targets/x86/64/*rootfs.tar.gz $GITHUB_WORKSPACE
