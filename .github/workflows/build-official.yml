@@ -56,7 +56,6 @@ jobs:
     - name: TEST $GITHUB_WORKSPACE
       run: |
         ls $GITHUB_WORKSPACE
-        ls openwrt
         cd $GITHUB_WORKSPACE && pwd
         
     - name: Initialization environment
