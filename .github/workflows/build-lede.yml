@@ -47,6 +47,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
+    - name: Login To DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PWD }}
+        
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -95,7 +101,7 @@ jobs:
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-
+        
     - name: Download package
       id: package
       run: |
@@ -124,3 +130,13 @@ jobs:
         name: OpenWrt
         path: openwrt/bin/targets/
         
+    - name: Build & Push  Image (Default)
+      uses: docker/build-push-action@v2
+      with:
+        platforms: ${{ env.DOCKER_IMAGE_ARCH }}
+        file: Dockerfile
+        context: .
+        push: true
+        tags: |
+          ${{ secrets.DOCKERHUB_USERNAME }}/openwrt_lede:x86_64
+          
