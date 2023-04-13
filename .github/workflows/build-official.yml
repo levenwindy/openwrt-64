@@ -29,7 +29,7 @@ env:
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: official.config
   DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2.sh
+  DIY_P2_SH: diy_officile.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
@@ -63,14 +63,10 @@ jobs:
 
     - name: Clone source code 
       working-directory: /workdir
-      # 替换默认主题为 luci-theme-argon
+      # git clone  https://github.com/NueXini/NueXini_Packages openwrt/package/NueXini_Packages
       run: |
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
-        git clone  https://github.com/NueXini/NueXini_Packages openwrt/package/NueXini_Packages
-        git clone https://github.com/coolsnowwolf/lede lede
-        cp -r lede/package/lean/r8125 openwrt/package/NueXini_Packages/
-        rm -rf lede
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Load custom feeds
@@ -94,10 +90,10 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
         
-    - name: 替换默认主题 luci-theme-argon
-      run: |
-        sed -i 's/luci-theme-bootstrap/luci-theme-argon/' openwrt/feeds/luci/collections/luci/Makefile
-        cat openwrt/feeds/luci/collections/luci/Makefile
+    #- name: 替换默认主题 luci-theme-argon
+    #  run: |
+     #   sed -i 's/luci-theme-bootstrap/luci-theme-argon/' openwrt/feeds/luci/collections/luci/Makefile
+    #    cat openwrt/feeds/luci/collections/luci/Makefile
         
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
