@@ -75,8 +75,8 @@ jobs:
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Load custom feeds
+       # [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
       run: |
-        [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
         chmod +x $DIY_P1_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P1_SH
@@ -89,6 +89,7 @@ jobs:
 
     - name: Load custom configuration 替换默认主题 luci-theme-argon
       run: |
+        ls -al
         [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x $DIY_P2_SH
@@ -111,7 +112,6 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-        make download
 
     - name: Compile the firmware
       id: compile
@@ -130,14 +130,6 @@ jobs:
       with:
         name: OpenWrt
         path: openwrt/bin/targets/
-    
-    - name: TEST
-      run: |
-        cd openwrt && ls
-        cd bin && ls
-        cd targets && ls
-        cd x86 && ls
-        cd 64 && ls
     
     - name: Build Mini 
       run: |
