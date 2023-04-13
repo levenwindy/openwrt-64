@@ -143,5 +143,5 @@ jobs:
         context: .
         push: true
         tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/openwrt:x86_64_lede
+          ${{ secrets.DOCKERHUB_USERNAME }}/openwrt:amd64_immortalwrt
           
