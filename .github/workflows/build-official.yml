@@ -90,11 +90,11 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
         
-    - name: 增加插件 8125
-      run: |
-        mkdir -p package/other
-        cd package/other
-        git clone https://github.com/goldkeyber112/openwrt-r8125 
+   # - name: 增加插件 8125
+    #  run: |
+    #    mkdir -p package/other
+    #    cd package/other
+     #   git clone https://github.com/goldkeyber112/openwrt-r8125 
         
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
