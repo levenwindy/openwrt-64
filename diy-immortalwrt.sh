@@ -26,5 +26,5 @@
 # cat package/lean/default-settings/files/zzz-default-settings 
 
 #- name: 替换默认主题 luci-theme-argon
-#sed -i 's/luci-theme-bootstrap/luci-theme-argon/' feeds/luci/collections/luci/Makefile
+sed -i 's/luci-theme-bootstrap/luci-theme-argon/' feeds/luci/collections/luci/Makefile
 #cat feeds/luci/collections/luci/Makefile
