@@ -16,5 +16,9 @@
 # Add a feed source
 #echo 'src-git helloworld https://github.com/fw876/helloworld' >>feeds.conf.default
 #echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
+
+# 默认ip
+sed -i 's/192.168.1.1/192.168.1.210/g' package/base-files/files/bin/config_generate
+
 # 修改时区
 sed -i 's/UTC/CST-8/g'  package/base-files/files/bin/config_generate
