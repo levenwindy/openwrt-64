@@ -27,3 +27,5 @@
 # mkdir -p package/other
 #cd package/other
  #git clone  https://github.com/NueXini/NueXini_Packages
+#- name: 替换默认主题 luci-theme-argon
+sed -i 's/luci-theme-bootstrap/luci-theme-argon/' feeds/luci/collections/luci/Makefile
