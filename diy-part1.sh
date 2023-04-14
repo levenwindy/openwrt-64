@@ -17,8 +17,11 @@
 #echo 'src-git helloworld https://github.com/fw876/helloworld' >>feeds.conf.default
 #echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
 
-# 默认ip
+# 默认ip 192.168.1.210
 sed -i 's/192.168.1.1/192.168.1.210/g' package/base-files/files/bin/config_generate
 
-# 修改时区
+# 修改时区 UTF-8
 sed -i 's/UTC/CST-8/g'  package/base-files/files/bin/config_generate
+
+# 修改主机名 OP
+sed -i 's/ImmortalWrt/OP/g'  package/base-files/files/bin/config_generate
