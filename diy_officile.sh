@@ -11,7 +11,7 @@
 #
 
 # Modify default IP
-sed -i 's/192.168.1.1/192.168.1.210/g' package/base-files/files/bin/config_generate
+# sed -i 's/192.168.1.1/192.168.1.210/g' package/base-files/files/bin/config_generate
 
 # 设定ip dns
 #sed -i "/exit 0/i\uci set network.lan.ipaddr='192.168.1.210'" feeds/small8/.github/diy/zzz-default-settings
