@@ -13,7 +13,7 @@ on:
   push:
     # branches: [ master ]
     paths:
-      - 'immortalwrt.config'
+      - 'im-wrt-mini.config'
   repository_dispatch:
   workflow_dispatch:
     inputs:
@@ -25,7 +25,7 @@ on:
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: master
-  CONFIG_FILE: immortalwrt.config
+  CONFIG_FILE: wrt-mini.config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-immortalwrt.sh
   UPLOAD_BIN_DIR: false
@@ -141,7 +141,7 @@ jobs:
         context: .
         push: true
         tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/openwrt:amd64_immortalwrt
+          ${{ secrets.DOCKERHUB_USERNAME }}/openwrt:mini
           
 
     - name: Organize files
