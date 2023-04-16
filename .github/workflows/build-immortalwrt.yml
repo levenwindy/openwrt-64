@@ -44,12 +44,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@main
-
-    - name: Login To DockerHub
-      uses: docker/login-action@master
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PWD }}
         
     - name: Initialization environment
       env:
@@ -135,6 +129,12 @@ jobs:
         cd openwrt
         cp bin/targets/x86/64/*rootfs.tar.gz $GITHUB_WORKSPACE
         ls $GITHUB_WORKSPACE
+
+    - name: Login To DockerHub
+      uses: docker/login-action@master
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PWD }}
         
     - name: Build & Push  Image (Default)
       uses: docker/build-push-action@master
