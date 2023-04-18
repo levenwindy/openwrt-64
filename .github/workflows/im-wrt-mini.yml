@@ -144,23 +144,23 @@ jobs:
         name: mini-immortalWRT
         path: openwrt/bin/targets/
         
-    - name : 附件 squashfs-combined.img.gz
+    - name : 附件 squashfs-combined-efi.img.gz
       uses: actions/upload-artifact@master
       with:
-        path: openwrt/bin/targets/*/*/immortalwrt-x86-64-generic-squashfs-combined-efi.img
+        path: openwrt/bin/targets/*/*/*squashfs-combined-efi.img.gz
         if-no-files-found: error
 
     - name : 附件 squashfs-combined.img.gz
       uses: actions/upload-artifact@master
       with:
-        path: openwrt/bin/targets/*/*/immortalwrt-x86-64-generic-squashfs-combined.img
+        path: openwrt/bin/targets/*/*/*squashfs-combined.img.gz
         if-no-files-found: error
         
     - name : 附件 packages
       uses: actions/upload-artifact@master
       with:
         name: packages
-        path: openwrt/bin/targets/*/*/
+        path: openwrt/bin/targets/*/*/packages
         if-no-files-found: error
     
     - name: Build Mini 
