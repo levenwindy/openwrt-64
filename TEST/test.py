@@ -6,11 +6,12 @@ import string
 import time
 import os
 import sys
-#########
+MAXTIME = 1
 os.system("title WARP-PLUS-CLOUDFLARE By ALIILAPRO")
 os.system('cls' if os.name == 'nt' else 'clear')
 print('Getting WARP+ Traffic on Github Actions')
 referrer = os.environ["DEVICEID"]
+
 def genString(stringLength):
 	try:
 		letters = string.ascii_letters + string.digits
@@ -51,13 +52,21 @@ def run():
 
 g = 0
 b = 0
+starttime = datetime.datetime.now()
 while True:
+	endtime = datetime.datetime.now()
+	TIME = (endtime - starttime).seconds / 60
+	if MINUTE <= MAXTIME:
+    	    print("继续..")
+	else:
+	    print('停止')
+	    break
 	result = run()
 	if result == 200:
 		g = g + 1
 		os.system('cls' if os.name == 'nt' else 'clear')
 		print("")
-		print("Getting WARP+ Traffic")
+		print("Getting + Traffic")
 		print("")
 		animation = ["[■□□□□□□□□□] 10%","[■■□□□□□□□□] 20%", "[■■■□□□□□□□] 30%", "[■■■■□□□□□□] 40%", "[■■■■■□□□□□] 50%", "[■■■■■■□□□□] 60%", "[■■■■■■■□□□] 70%", "[■■■■■■■■□□] 80%", "[■■■■■■■■■□] 90%", "[■■■■■■■■■■] 100%"] 
 		for i in range(len(animation)):
@@ -73,7 +82,7 @@ while True:
 		b = b + 1
 		os.system('cls' if os.name == 'nt' else 'clear')
 		print("")
-		print("Getting WARP+ Traffic")
+		print("Getting + Traffic")
 		print("")
 		print("[:(] Error when connecting to server.")
 		print(f"[#] Total: {g} Good {b} Bad")	
