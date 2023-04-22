@@ -1,0 +1,29 @@
+name: 'test'
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - './TEST/test.py'
+  schedule:
+    - cron: '33 17/3 * * *'
+    
+env:
+  TZ: Asia/Shanghai
+  
+jobs:
+  auto_getting_traffic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checking'
+        uses: actions/checkout@master
+
+      - name: 'Setting Python'
+        uses: actions/setup-python@master
+        with:
+          python-version: '3.x'
+
+      - name: 'Getting Traffic'
+        env:
+          DEVICEID: ${{ secrets.DEVICEID }}      
+        run: python ./TEST/test.py
