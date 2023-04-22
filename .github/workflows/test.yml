@@ -4,8 +4,8 @@ on:
   push:
     paths:
       - 'TEST/test.py'
-  schedule:
-    - cron: '50 */3 * * *'
+ # schedule:
+   # - cron: '50 */3 * * *'
     
 env:
   TZ: Asia/Shanghai
