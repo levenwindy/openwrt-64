@@ -55,7 +55,7 @@ b = 0
 starttime = datetime.datetime.now()
 while True:
 	endtime = datetime.datetime.now()
-	TIME = (endtime - starttime).seconds / 60
+	MINUTE = (endtime - starttime).seconds / 60
 	if MINUTE <= MAXTIME:
     	    print("继续..")
 	else:
