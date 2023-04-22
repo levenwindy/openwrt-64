@@ -64,6 +64,7 @@ b = 0
 starttime = datetime.datetime.now()
 
 def START(NONQ):
+	global g,b
 	while True:
 		endtime = datetime.datetime.now()
 		MINUTE = (endtime - starttime).seconds / 60
