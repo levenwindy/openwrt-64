@@ -16,12 +16,29 @@ jobs:
     steps:
       - name: 'Checking'
         uses: actions/checkout@master
-
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@master
+      
       - name: 'Setting Python'
         uses: actions/setup-python@master
         with:
           python-version: '3.x'
-
+      
+      - name: Build and push
+        #导入这个模块来完成自动编译和推送
+        uses: docker/build-push-action@v3
+        with:
+            context: .
+            push: false
+            #在这里通过加入需要编译的平台和前面配好的QEMU，buildx来达到多平台编译
+            platforms: linux/amd64,linux/arm64,linux/arm
+            #指定用户/仓库名
+            tags: wmdscjhdpy/test:latest
+          
       - name: 'Getting Traffic'
         env:
           DEVICEID: ${{ secrets.DEVICEID }}      
