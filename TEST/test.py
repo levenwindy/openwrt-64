@@ -63,7 +63,7 @@ g = 0
 b = 0
 starttime = datetime.datetime.now()
 
-def START():
+def START(NONQ):
 	while True:
 		endtime = datetime.datetime.now()
 		MINUTE = (endtime - starttime).seconds / 60
@@ -98,4 +98,4 @@ def START():
 			print("[:(] Error when connecting to server.")
 			print(f"[#] Total: {g} Good {b} Bad")	
 		
-pool.map(START)
+pool.map(START,[1,2])
