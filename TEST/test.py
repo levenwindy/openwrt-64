@@ -58,7 +58,7 @@ while True:
 	endtime = datetime.datetime.now()
 	MINUTE = (endtime - starttime).seconds / 60
 	if MINUTE <= MAXTIME:
-    	    print("继续..")
+    	    pass
 	else:
 	    print(f'超时停止!已运行 {MINUTE} 分钟')
 	    break
