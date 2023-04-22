@@ -8,7 +8,6 @@ import os
 import sys
 MAXTIME = 90  # 分钟
 WAITTIME = 14 # 时间 秒间隔
-
 os.system("title WARP-PLUS-CLOUDFLARE By ALIILAPRO")
 os.system('cls' if os.name == 'nt' else 'clear')
 print('Getting WARP+ Traffic on Github Actions')
