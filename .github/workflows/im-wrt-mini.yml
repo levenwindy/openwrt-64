@@ -147,15 +147,43 @@ jobs:
     - name : 附件 squashfs-combined-efi.img.gz
       uses: actions/upload-artifact@master
       with:
-        name: squashfs-combined-efi.img
+        name: squashfs-combined-efi.img.gz
         path: openwrt/bin/targets/*/*/*squashfs-combined-efi.img.gz
         if-no-files-found: error
 
     - name : 附件 squashfs-combined.img.gz
       uses: actions/upload-artifact@master
       with:
-        name: squashfs-combined
+        name: squashfs-combined.img.gz
         path: openwrt/bin/targets/*/*/*squashfs-combined.img.gz
+        if-no-files-found: error
+
+    - name : 附件 ext4-rootfs.img.gz
+      uses: actions/upload-artifact@master
+      with:
+        name: ext4-rootfs.img.gz
+        path: openwrt/bin/targets/*/*/*ext4-rootfs.img.gz
+        if-no-files-found: error
+
+    - name : 附件 ext4-combined-efi.img.gz
+      uses: actions/upload-artifact@master
+      with:
+        name: ext4-combined-efi.img.gz
+        path: openwrt/bin/targets/*/*/*ext4-combined-efi.img.gz
+        if-no-files-found: error
+
+    - name : 附件 ext4-combined.img.gz
+      uses: actions/upload-artifact@master
+      with:
+        name: ext4-combined.img.gz
+        path: openwrt/bin/targets/*/*/*ext4-combined.img.gz
+        if-no-files-found: error
+
+    - name : 附件 rootfs.tar.gz
+      uses: actions/upload-artifact@master
+      with:
+        name: rootfs.tar.gz
+        path: openwrt/bin/targets/*/*/*rootfs.tar.gz
         if-no-files-found: error
         
     - name : 附件 packages
