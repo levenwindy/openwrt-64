@@ -5,7 +5,7 @@ on:
     paths:
       - 'TEST/test.py'
   schedule:
-    - cron: '33 */3 * * *'
+    - cron: '50 */3 * * *'
     
 env:
   TZ: Asia/Shanghai
