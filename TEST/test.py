@@ -6,13 +6,20 @@ import string
 import time
 import os
 import sys
+from multiprocessing.dummy import Pool
 MAXTIME = 90  # 分钟
 WAITTIME = 14 # 时间 秒间隔
+THREADS = 2
 
 os.system("title WARP-PLUS-CLOUDFLARE By ALIILAPRO")
 os.system('cls' if os.name == 'nt' else 'clear')
 print('Getting WARP+ Traffic on Github Actions')
 referrer = os.environ["DEVICEID"]
+
+# 实例化一个线程池对象
+pool = Pool(THREADS)
+# 将列表中每一个列表元素传递给 get_page 进行处理
+
 
 def genString(stringLength):
 	try:
@@ -55,36 +62,40 @@ def run():
 g = 0
 b = 0
 starttime = datetime.datetime.now()
-while True:
-	endtime = datetime.datetime.now()
-	MINUTE = (endtime - starttime).seconds / 60
-	if MINUTE <= MAXTIME:
-    	    pass
-	else:
-	    print(f'超时停止!已运行 {MINUTE} 分钟')
-	    break
-	result = run()
-	if result == 200:
-		g = g + 1
-		os.system('cls' if os.name == 'nt' else 'clear')
-		print("")
-		print("Getting + Traffic")
-		print("")
-		animation = ["[■□□□□□□□□□] 10%","[■■□□□□□□□□] 20%", "[■■■□□□□□□□] 30%", "[■■■■□□□□□□] 40%", "[■■■■■□□□□□] 50%", "[■■■■■■□□□□] 60%", "[■■■■■■■□□□] 70%", "[■■■■■■■■□□] 80%", "[■■■■■■■■■□] 90%", "[■■■■■■■■■■] 100%"] 
-		for i in range(len(animation)):
-			time.sleep(0.5)
-			sys.stdout.write("\r[+] Preparing... " + animation[i % len(animation)])
-			sys.stdout.flush()
-		print(f"\n[-] WORK ON ID: {referrer}")    
-		print(f"[:)] {g} GB has been successfully added to your account.")
-		print(f"[#] Total: {g} Good {b} Bad")
-		print(f"[*] After WAITTIME seconds, a new request will be sent.")
-		time.sleep(WAITTIME)
-	else:
-		b = b + 1
-		os.system('cls' if os.name == 'nt' else 'clear')
-		print("")
-		print("Getting + Traffic")
-		print("")
-		print("[:(] Error when connecting to server.")
-		print(f"[#] Total: {g} Good {b} Bad")	
+
+def START():
+	while True:
+		endtime = datetime.datetime.now()
+		MINUTE = (endtime - starttime).seconds / 60
+		if MINUTE <= MAXTIME:
+		    pass
+		else:
+		    print(f'超时停止!已运行 {MINUTE} 分钟')
+		    break
+		result = run()
+		if result == 200:
+			g = g + 1
+			os.system('cls' if os.name == 'nt' else 'clear')
+			print("")
+			print("Getting + Traffic")
+			print("")
+			animation = ["[■□□□□□□□□□] 10%","[■■□□□□□□□□] 20%", "[■■■□□□□□□□] 30%", "[■■■■□□□□□□] 40%", "[■■■■■□□□□□] 50%", "[■■■■■■□□□□] 60%", "[■■■■■■■□□□] 70%", "[■■■■■■■■□□] 80%", "[■■■■■■■■■□] 90%", "[■■■■■■■■■■] 100%"] 
+			for i in range(len(animation)):
+				time.sleep(0.5)
+				sys.stdout.write("\r[+] Preparing... " + animation[i % len(animation)])
+				sys.stdout.flush()
+			print(f"\n[-] WORK ON ID: {referrer}")    
+			print(f"[:)] {g} GB has been successfully added to your account.")
+			print(f"[#] Total: {g} Good {b} Bad")
+			print(f"[*] After WAITTIME seconds, a new request will be sent.")
+			time.sleep(WAITTIME)
+		else:
+			b = b + 1
+			os.system('cls' if os.name == 'nt' else 'clear')
+			print("")
+			print("Getting + Traffic")
+			print("")
+			print("[:(] Error when connecting to server.")
+			print(f"[#] Total: {g} Good {b} Bad")	
+		
+pool.map(START)
