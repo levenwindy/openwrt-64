@@ -6,7 +6,7 @@ import string
 import time
 import os
 import sys
-MAXTIME = 90
+MAXTIME = 90  # 分钟
 WAITTIME = 15 # 时间 秒
 os.system("title WARP-PLUS-CLOUDFLARE By ALIILAPRO")
 os.system('cls' if os.name == 'nt' else 'clear')
