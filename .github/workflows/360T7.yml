@@ -34,6 +34,7 @@ env:
   UPLOAD_WETRANSFER: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
+  NAME: 360T7
 
 jobs:
   build:
@@ -66,6 +67,7 @@ jobs:
         df -hT $PWD
         git clone $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        echo $NAME
         
     - name: Load custom feeds
       run: |
@@ -115,7 +117,7 @@ jobs:
     - name : Upload artifact 上传附件
       uses: actions/upload-artifact@master
       with:
-        name: mini-immortalWRT
+        name: $NAME
         path: openwrt/bin/targets/
         
     - name : 附件 packages
@@ -128,42 +130,42 @@ jobs:
     - name : 附件 360-t7-squashfs-sysupgrade.bin
       uses: actions/upload-artifact@master
       with:
-        name: packages
+        name: 360-t7-squashfs-sysupgrade
         path: openwrt/bin/targets/*/*/*360-t7-squashfs-sysupgrade.bin
         if-no-files-found: error
         
     - name : 附件 360-t7-squashfs-factory.bin
       uses: actions/upload-artifact@master
       with:
-        name: packages
+        name: 360-t7-squashfs-factory
         path: openwrt/bin/targets/*/*/*360-t7-squashfs-factory.bin
         if-no-files-found: error
         
     - name : 附件 360-t7-initramfs-kernel.bin
       uses: actions/upload-artifact@master
       with:
-        name: packages
+        name: 360-t7-initramfs-kernel
         path: openwrt/bin/targets/*/*/*360-t7-initramfs-kernel.bin
         if-no-files-found: error
         
     - name : 附件 360-t7-108M-squashfs-sysupgrade.bin
       uses: actions/upload-artifact@master
       with:
-        name: packages
+        name: 360-t7-108M-squashfs-sysupgrade
         path: openwrt/bin/targets/*/*/*360-t7-108M-squashfs-sysupgrade.bin
         if-no-files-found: error
         
     - name : 附件 360-t7-108M-squashfs-factory.bin
       uses: actions/upload-artifact@master
       with:
-        name: packages
+        name: 360-t7-108M-squashfs-factory
         path: openwrt/bin/targets/*/*/*360-t7-108M-squashfs-factory.bin
         if-no-files-found: error
         
     - name : 附件 360-t7-108M-initramfs-kernel.bin
       uses: actions/upload-artifact@master
       with:
-        name: packages
+        name: 360-t7-108M-initramfs-kernel
         path: openwrt/bin/targets/*/*/*360-t7-108M-initramfs-kernel.bin
         if-no-files-found: error
     
