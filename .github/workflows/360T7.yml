@@ -124,5 +124,48 @@ jobs:
         name: packages
         path: openwrt/bin/targets/*/*/packages
         if-no-files-found: error
+        
+    - name : 附件 360-t7-squashfs-sysupgrade.bin
+      uses: actions/upload-artifact@master
+      with:
+        name: packages
+        path: openwrt/bin/targets/*/*/*360-t7-squashfs-sysupgrade.bin
+        if-no-files-found: error
+        
+    - name : 附件 360-t7-squashfs-factory.bin
+      uses: actions/upload-artifact@master
+      with:
+        name: packages
+        path: openwrt/bin/targets/*/*/*360-t7-squashfs-factory.bin
+        if-no-files-found: error
+        
+    - name : 附件 360-t7-initramfs-kernel.bin
+      uses: actions/upload-artifact@master
+      with:
+        name: packages
+        path: openwrt/bin/targets/*/*/*360-t7-initramfs-kernel.bin
+        if-no-files-found: error
+        
+    - name : 附件 360-t7-108M-squashfs-sysupgrade.bin
+      uses: actions/upload-artifact@master
+      with:
+        name: packages
+        path: openwrt/bin/targets/*/*/*360-t7-108M-squashfs-sysupgrade.bin
+        if-no-files-found: error
+        
+    - name : 附件 360-t7-108M-squashfs-factory.bin
+      uses: actions/upload-artifact@master
+      with:
+        name: packages
+        path: openwrt/bin/targets/*/*/*360-t7-108M-squashfs-factory.bin
+        if-no-files-found: error
+        
+    - name : 附件 360-t7-108M-initramfs-kernel.bin
+      uses: actions/upload-artifact@master
+      with:
+        name: packages
+        path: openwrt/bin/targets/*/*/*360-t7-108M-initramfs-kernel.bin
+        if-no-files-found: error
+    
     
         
