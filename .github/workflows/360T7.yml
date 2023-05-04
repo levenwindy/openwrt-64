@@ -14,6 +14,7 @@ on:
     # branches: [ master ]
     paths:
       - 'config/360T7.config'
+      - 'config/360T7_mini.config'
   repository_dispatch:
   workflow_dispatch:
     inputs:
@@ -25,8 +26,8 @@ on:
 env:
   REPO_URL: https://github.com/hanwckf/immortalwrt-mt798x
   REPO_BRANCH: master
-  CONFIG_FILE: config/360T7.config
-  DIY_P1_SH: diy-part1.sh
+  CONFIG_FILE: config/360T7_mini.config
+  DIY_P1_SH: diy-360T7.sh
   DIY_P2_SH: diy-immortalwrt.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
@@ -67,13 +68,12 @@ jobs:
         df -hT $PWD
         git clone $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-        echo $NAME
         
     - name: Load custom feeds
       run: |
-        chmod +x $DIY_P1_SH
+        chmod +x bash/$DIY_P1_SH
         cd openwrt
-        $GITHUB_WORKSPACE/$DIY_P1_SH
+        $GITHUB_WORKSPACE/bash/$DIY_P1_SH
         
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
