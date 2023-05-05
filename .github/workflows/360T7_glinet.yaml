@@ -88,18 +88,10 @@ jobs:
       run: |
         cd gl-infra-builder/mt7981
         git clone https://github.com/gl-inet/glinet4.x.git
-      
-    - name:  gl_pkg_config.mk
-      run: |
-        cd gl-infra-builder/mt7981
         cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk
-        
-    - name:  glinet_depends
-      run: |
-        cd gl-infra-builder/mt7981
         ./scripts/gen_config.py target_mt7981_360t7-108M glinet_depends
         
-    - name: make
+    - name: make 编译
       run: |
         make V=s -j2 GL_PKGDIR=gl-infra-builder/mt7981/glinet4.x/mt7981/
 
