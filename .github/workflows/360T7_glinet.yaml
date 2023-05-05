@@ -64,8 +64,8 @@ jobs:
       
     - name: config-mt798x-7.6.6.1.yml
       run: |
-         cd gl-infra-builder
-         python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
+         cd gl-infra-builder && cp configs/config-mt798x-7.6.6.1.yml .
+         python3 setup.py -c config-mt798x-7.6.6.1.yml
       
     - name:  target_mt7981_360t7-108M
       run: |
