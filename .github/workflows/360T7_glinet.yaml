@@ -59,7 +59,7 @@ jobs:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       
     - name:  git clone 【编译360t7-108M OpenWrt固件(无GL.iNet包)
-      id: git clone
+      id: gitclone
       run: |
          git clone https://github.com/FUjr/gl-infra-builder.git
       
