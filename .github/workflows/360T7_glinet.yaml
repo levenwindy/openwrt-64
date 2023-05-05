@@ -93,6 +93,9 @@ jobs:
       run: |
         cd gl-infra-builder/mt7981/target
         du -ah -d1
+   
+    - name: SSH connection to Actions
+      uses: P3TERX/debugger-action@master
         
     - name: make
       run: |
