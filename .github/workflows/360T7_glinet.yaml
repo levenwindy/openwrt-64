@@ -77,6 +77,10 @@ jobs:
         cd gl-infra-builder/mt7981
         ./scripts/gen_config.py target_mt7981_360t7-108M luci
       
+    - name:  make1
+      run: |
+        make -j2 || make V=s -j1
+        
     - name:  glinet4.x.git
       run: |
         cd gl-infra-builder/mt7981
