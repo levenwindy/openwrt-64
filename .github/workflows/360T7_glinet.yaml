@@ -99,13 +99,13 @@ jobs:
         cd gl-infra-builder/mt7981
         
     - name: ls al
-      id:  ls al
+      id:  ls
       run: |
         cd gl-infra-builder/mt7981
         ls -al
         
     - name: du -ah -d1
-      id:  du -ah -d1
+      id:  du
       run: |
         cd gl-infra-builder/mt7981
         du -ah -d1
