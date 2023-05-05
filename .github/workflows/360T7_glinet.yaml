@@ -98,15 +98,16 @@ jobs:
       run: |
         cd gl-infra-builder/mt7981
         ./scripts/gen_config.py target_mt7981_360t7-108M glinet_depends
-
-    - name: Don't kill instace
-     # Prevent to killing instance after failure
-      run: |
-        sleep 1h
         
     - name: make
       run: |
-        cd gl-infra-builder/mt7981
+        make V=s -j2 GL_PKGDIR=gl-infra-builder/mt7981/glinet4.x/mt7981/
+
+    - name: Don't kill instace
+      if: ${{ failure() }}
+     # Prevent to killing instance after failure
+      run: |
+        sleep 1h
         
     - name : 上传附件 target
       uses: actions/upload-artifact@master
