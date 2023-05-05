@@ -93,10 +93,10 @@ jobs:
         
     - name: make 编译
       run: |
-        make V=s -j2 GL_PKGDIR=gl-infra-builder/mt7981/glinet4.x/mt7981/
+        make -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/ && make V=s -j1 GL_PKGDIR=`pwd`/glinet4.x/mt7981/
 
     - name: Don't kill instace
-      #if: ${{ failure() }}
+      if: ${{ failure() }}
      # Prevent to killing instance after failure
       run: |
         sleep 1h
