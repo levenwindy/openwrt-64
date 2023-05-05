@@ -89,25 +89,25 @@ jobs:
         cd gl-infra-builder/mt7981
         ./scripts/gen_config.py target_mt7981_360t7-108M glinet_depends
         
+    - name: du 1
+      run: |
+        cd gl-infra-builder/mt7981/target
+        du -ah -d1
+        
     - name: make
       run: |
         cd gl-infra-builder/mt7981
         
-    - name: ls al
-      run: |
-        cd gl-infra-builder/mt7981
-        ls -al
-        
-    - name: du -ah -d1
+    - name: du 2
       run: |
         cd gl-infra-builder/mt7981
         du -ah -d1
         
-    - name : 上传附件 mt7981
+    - name : 上传附件 target
       uses: actions/upload-artifact@master
       with:
         name: mt7981
-        path: gl-infra-builder/mt7981
+        path: gl-infra-builder/mt7981/target
         if-no-files-found: error
         
   
