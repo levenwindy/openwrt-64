@@ -100,8 +100,9 @@ jobs:
         ./scripts/gen_config.py target_mt7981_360t7-108M glinet_depends
 
     - name: Don't kill instace
-      if: ${{ failure() }}
-      run: sleep 1h # Prevent to killing instance after failure
+     # Prevent to killing instance after failure
+      run: |
+        sleep 1h
         
     - name: make
       run: |
