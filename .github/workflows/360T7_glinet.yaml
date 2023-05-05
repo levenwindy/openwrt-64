@@ -64,48 +64,40 @@ jobs:
          git clone https://github.com/FUjr/gl-infra-builder.git
       
     - name: config-mt798x-7.6.6.1.yml
-      id: config-mt798x-7.6.6.1.yml
       run: |
          cd gl-infra-builder
          python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
       
     - name:  target_mt7981_360t7-108M
-      id: target_mt7981_360t7-108M
       run: |
         cd gl-infra-builder/mt7981
         ./scripts/gen_config.py target_mt7981_360t7-108M luci
       
     - name:  glinet4.x.git
-      id: glinet4.x.git
       run: |
         cd gl-infra-builder/mt7981
         git clone https://github.com/gl-inet/glinet4.x.git
       
     - name:  gl_pkg_config.mk
-      id: gl_pkg_config.mk
       run: |
         cd gl-infra-builder/mt7981
         cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk
         
     - name:  glinet_depends
-      id: glinet_depends
       run: |
         cd gl-infra-builder/mt7981
         ./scripts/gen_config.py target_mt7981_360t7-108M glinet_depends
         
     - name: make
-      id:  make
       run: |
         cd gl-infra-builder/mt7981
         
     - name: ls al
-      id:  ls
       run: |
         cd gl-infra-builder/mt7981
         ls -al
         
     - name: du -ah -d1
-      id:  du
       run: |
         cd gl-infra-builder/mt7981
         du -ah -d1
