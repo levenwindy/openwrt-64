@@ -37,7 +37,7 @@ jobs:
       uses: actions/checkout@main
       
     - name: Start SSH via Ngrok
-      if: ${{ failure() }}
+      #if: ${{ failure() }}
       run: curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
       env:
         # After sign up on the https://ngrok.com/ 
@@ -59,13 +59,6 @@ jobs:
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
-        
-    - name: SSH connection to Actions
-      uses: P3TERX/ssh2actions@v1.0.0
-      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-      env:
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       
     - name:  git clone 【编译360t7-108M OpenWrt固件(无GL.iNet包)
       id: gitclone
