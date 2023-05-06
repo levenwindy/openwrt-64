@@ -37,8 +37,9 @@ jobs:
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib \
-              gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget qemu-utils
+        sudo -E apt-get -qq install binutils bzip2 diff find flex gawk gcc-6+ getopt grep install libc-dev \
+              libz-dev make4.1+ perl python3.6+ rsync subversion unzip which libncurses5-dev zlib1g-dev gawk \
+              gcc-multilib g++-multilib flex git-core gettext libssl-dev ocaml sharutils re2c
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
@@ -49,7 +50,13 @@ jobs:
       id: gitclone
       run: |
          git clone https://github.com/FUjr/gl-infra-builder.git
-      
+    
+    - name: Don't kill instace
+      #if: ${{ failure() }}
+     # Prevent to killing instance after failure
+      run: |
+        sleep 1.5h
+        
     - name: config-mt798x-7.6.6.1.yml
       run: |
          git config --global user.email 'youremail.com'
@@ -73,11 +80,6 @@ jobs:
       run: |
         make -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/ && make V=s -j1 GL_PKGDIR=`pwd`/glinet4.x/mt7981/
 
-    - name: Don't kill instace
-      if: ${{ failure() }}
-     # Prevent to killing instance after failure
-      run: |
-        sleep 1h
         
     - name : 上传附件 target
       uses: actions/upload-artifact@master
