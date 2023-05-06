@@ -45,8 +45,7 @@ jobs:
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq install binutils bzip2 flex \
-                gawk gcc-6+ getopt grep install libc-dev libz-dev \
+        sudo -E apt-get -qq install libc-dev libz-dev \
                 make4.1+ perl rsync subversion unzip  \
                 which libncurses5-dev zlib1g-dev gawk gcc-multilib  \
                 g++-multilib flex git-core gettext libssl-dev ocaml  \
