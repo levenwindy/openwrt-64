@@ -74,7 +74,7 @@ jobs:
    #   run: |
    #     sleep 1.5h
         
-    - name:  gen_config.py target_mt7981_360t7-108M glinet_depends
+    - name:  gen_config.py  修改代码 gl_pkg_config.mk
         # 可修改
         # cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
       run: |
