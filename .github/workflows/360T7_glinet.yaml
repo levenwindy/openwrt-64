@@ -49,31 +49,40 @@ jobs:
       id: gitclone
       run: |
          git clone https://github.com/FUjr/gl-infra-builder.git
-    
-    - name: Don't kill instace
-      #if: ${{ failure() }}
+         cd gl-infra-builder 
+         git config --global user.email 'youremail.com'
+         git config --global user.name 'your name'
+        
+    - name: config-mt798x-7.6.6.1.yml
+      run: |
+         cd gl-infra-builder/
+         python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
+      
+    - name:  gen_config.py target_mt7981_360t7-108M luci # make menuconfig 
+      run: |
+        cd gl-infra-builder/mt7981
+        ./scripts/gen_config.py target_mt7981_360t7-108M luci
+        screen -S 11
+        
+        
+    - name: 编译 make manuconfig
      # Prevent to killing instance after failure
       run: |
         sleep 1.5h
         
-    - name: config-mt798x-7.6.6.1.yml
-      run: |
-         git config --global user.email 'youremail.com'
-         git config --global user.name 'your name'
-         cd gl-infra-builder 
-         python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
-      
-    - name:  target_mt7981_360t7-108M
-      run: |
-        cd gl-infra-builder/mt7981
-        ./scripts/gen_config.py target_mt7981_360t7-108M luci
-        
-    - name:  glinet4.x.git
+    - name:  gen_config.py target_mt7981_360t7-108M glinet_depends
       run: |
         cd gl-infra-builder/mt7981
         git clone https://github.com/gl-inet/glinet4.x.git && \
         cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
         ./scripts/gen_config.py target_mt7981_360t7-108M glinet_depends
+   
+    - name: Don't kill instace
+      if: ${{ failure() }}
+     # Prevent to killing instance after failure
+      run: |
+        screen -S 11
+        sleep 1.5h
         
     - name: make 编译
       run: |
