@@ -7,7 +7,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Build immortalwrt
+name: 360T7_mini
 
 on:
   push:
