@@ -27,9 +27,9 @@ jobs:
       env:
         # After sign up on the https://ngrok.com/ 
         # You can find this token here: https://dashboard.ngrok.com/get-started/setup
-        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
         # This password you will use when authorizing via SSH
-        USER_PASS: ${{ secrets.USER_PASS_2 }}
+        USER_PASS: ${{ secrets.USER_PASS_1 }}
         
         
     - name: Initialization environment
@@ -74,7 +74,7 @@ jobs:
    #     sleep 1.5h
         
     - name:  gen_config.py  修改代码 gl_pkg_config.mk
-        # 可修改
+        # glinet 修改代码
         # cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
       run: |
         cd gl-infra-builder/mt7981
@@ -82,7 +82,12 @@ jobs:
         cp $GITHUB_WORKSPACE/360T7/gl_pkg_config_mt3000.mk ./glinet4.x/mt7981/gl_pkg_config.mk && \
         ./scripts/gen_config.py target_mt7981_360t7-108M glinet_depends
         
-    - name: make 编译
+    - name: .config 进行编译
+      run: |
+        cd gl-infra-builder/mt7981
+        cat .config
+    
+    - name: make 编译 
       run: |
         cd gl-infra-builder/mt7981
         make V=s -j2 GL_PKGDIR=./glinet4.x/mt7981/ 
