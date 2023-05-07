@@ -16,7 +16,7 @@ env:
   NAME: 360T7_mini
   ORGIN: 5.4
   NEW_PATCHVER: 5.4
-  NEW_TESTING_PATCHVER: 5.4
+  NEW_TESTING_PATCHVER: 5.15
   PLATFORM: mediatek
 jobs:
   build:
