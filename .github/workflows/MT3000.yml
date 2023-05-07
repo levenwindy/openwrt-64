@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/MT3000.yml'
-
+      
 env:
   REPO_URL: https://github.com/gl-inet/gl-infra-builder
   REPO_BRANCH: master
