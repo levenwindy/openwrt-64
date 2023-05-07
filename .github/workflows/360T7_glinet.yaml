@@ -27,9 +27,9 @@ jobs:
       env:
         # After sign up on the https://ngrok.com/ 
         # You can find this token here: https://dashboard.ngrok.com/get-started/setup
-        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
         # This password you will use when authorizing via SSH
-        USER_PASS: ${{ secrets.USER_PASS }}
+        USER_PASS: ${{ secrets.USER_PASS_2 }}
         
         
     - name: Initialization environment
@@ -85,8 +85,8 @@ jobs:
     - name: make 编译
       run: |
         cd gl-infra-builder/mt7981
-        make -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/ || make V=s -j1 GL_PKGDIR=`pwd`/glinet4.x/mt7981/
- 
+        make  V=s -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/ || make V=s -j1 GL_PKGDIR=`pwd`/glinet4.x/mt7981/
+        
     - name: Don kill instace
       if: ${{ failure() }}
       run: |
