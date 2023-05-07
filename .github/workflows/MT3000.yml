@@ -86,11 +86,12 @@ jobs:
       run: |
         cd gl-infra-builder/mt7981
         cat .config
-    
+        
+    # make -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/ || 
     - name: 1.2 编译 
       run: |
         cd gl-infra-builder/mt7981
-        make -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/ || make V=s -j1 GL_PKGDIR=`pwd`/glinet4.x/mt7981/
+        make V=s -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/
         
     - name: Don kill instace
       if: ${{ failure() }}
