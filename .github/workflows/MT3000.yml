@@ -65,10 +65,10 @@ jobs:
         cd gl-infra-builder/mt7981
         ./scripts/gen_config.py target_mt7981_gl-mt3000 luci
         
-    # - name: 编译 make manuconfig
+    - name: 1.1 编译 make manuconfig
      # Prevent to killing instance after failure
-      # run: |
-      #   make V=s -j2
+      run: |
+        make V=s -j2
         
     - name:  gen_config.py  修改代码 gl_pkg_config.mk
         # glinet 修改代码
@@ -85,10 +85,10 @@ jobs:
         cd gl-infra-builder/mt7981
         cat .config
     
-    - name: make 编译 
+    - name: 1.2 编译 
       run: |
         cd gl-infra-builder/mt7981
-        make -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/ || make V=s -j1 GL_PKGDIR=`pwd`/glinet4.x/mt7981/
+        make V=s -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/
         
     - name: Don kill instace
       if: ${{ failure() }}
