@@ -14,7 +14,7 @@ env:
   DIY_P2_SH: diy-immortalwrt.sh
   TZ: Asia/Shanghai
   NAME: 360T7
-  KERNEL_PATCHVER: 5.15
+  KERNEL_PATCHVER: 6.1
   KERNEL_TESTING_PATCHVER: 6.1
 
 jobs:
