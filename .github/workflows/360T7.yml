@@ -1,13 +1,4 @@
-# Copyright (c) 2019-2020 P3TERX <https://p3terx.com>
-# 
-# This is free software, licensed under the MIT License.
-# See /LICENSE for more information.
-#
-# https://github.com/P3TERX/Actions-OpenWrt
-# Description: Build OpenWrt using GitHub Actions
-#
-
-name: Build immortalwrt
+name: 360T7
 
 on:
   push:
@@ -18,14 +9,9 @@ on:
 env:
   REPO_URL: https://github.com/hanwckf/immortalwrt-mt798x
   REPO_BRANCH: master
-  CONFIG_FILE: config/360T7_mini.config
+  CONFIG_FILE: config/360T7.config
   DIY_P1_SH: diy-360T7.sh
   DIY_P2_SH: diy-immortalwrt.sh
-  UPLOAD_BIN_DIR: false
-  UPLOAD_FIRMWARE: true
-  UPLOAD_COWTRANSFER: true
-  UPLOAD_WETRANSFER: true
-  UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
   NAME: 360T7
 
@@ -106,60 +92,37 @@ jobs:
         echo -e "$(nproc) thread compile"
         make -j$(nproc) || make -j1 V=s
     
-    - name : 上传附件 整个打包
+    - name : 上传附件 整包
       uses: actions/upload-artifact@master
       with:
-        name: $NAME
+        name: 360T7
         path: openwrt/bin/targets/
         
     - name : 附件 packages
       uses: actions/upload-artifact@master
       with:
-        name: packages
+        name: 360T7_packages
         path: openwrt/bin/targets/*/*/packages
         if-no-files-found: error
         
-    - name : 附件 360-t7-squashfs-sysupgrade.bin
+    - name : 附件 initramfs-kernel.bin
       uses: actions/upload-artifact@master
       with:
-        name: 360-t7-squashfs-sysupgrade
-        path: openwrt/bin/targets/*/*/*360-t7-squashfs-sysupgrade.bin
+        name: 360-t7-108M-initramfs-kernel.bin
+        path: openwrt/bin/targets/*/*/*initramfs-kernel.bin
         if-no-files-found: error
         
-    - name : 附件 360-t7-squashfs-factory.bin
-      uses: actions/upload-artifact@master
-      with:
-        name: 360-t7-squashfs-factory
-        path: openwrt/bin/targets/*/*/*360-t7-squashfs-factory.bin
-        if-no-files-found: error
-        
-    - name : 附件 360-t7-initramfs-kernel.bin
-      uses: actions/upload-artifact@master
-      with:
-        name: 360-t7-initramfs-kernel
-        path: openwrt/bin/targets/*/*/*360-t7-initramfs-kernel.bin
-        if-no-files-found: error
-        
-    - name : 附件 360-t7-108M-squashfs-sysupgrade.bin
-      uses: actions/upload-artifact@master
-      with:
-        name: 360-t7-108M-squashfs-sysupgrade
-        path: openwrt/bin/targets/*/*/*360-t7-108M-squashfs-sysupgrade.bin
-        if-no-files-found: error
-        
-    - name : 附件 360-t7-108M-squashfs-factory.bin
+    - name : 附件 squashfs-factory.bin
       uses: actions/upload-artifact@master
       with:
         name: 360-t7-108M-squashfs-factory
-        path: openwrt/bin/targets/*/*/*360-t7-108M-squashfs-factory.bin
+        path: openwrt/bin/targets/*/*/*squashfs-factory.bin
         if-no-files-found: error
         
-    - name : 附件 360-t7-108M-initramfs-kernel.bin
+    - name : 附件 squashfs-sysupgrade.bin
       uses: actions/upload-artifact@master
       with:
-        name: 360-t7-108M-initramfs-kernel
-        path: openwrt/bin/targets/*/*/*360-t7-108M-initramfs-kernel.bin
+        name: 360-t7-108M-squashfs-sysupgrade.bin
+        path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
         if-no-files-found: error
-    
-    
-        
+      
