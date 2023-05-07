@@ -93,10 +93,10 @@ jobs:
         cd gl-infra-builder/mt7981
         make V=s -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/
         
-    - name: Don kill instace
-      if: ${{ failure() }}
-      run: |
-        sleep 1.5h
+    # - name: Don kill instace
+    #   if: ${{ failure() }}
+     #  run: |
+       #  sleep 1.5h
 
         
     - name : 上传附件 target
