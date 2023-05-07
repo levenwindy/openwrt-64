@@ -14,6 +14,7 @@ env:
   DIY_P2_SH: diy-immortalwrt.sh
   TZ: Asia/Shanghai
   NAME: 360T7
+  KERNEL_ORGIN: 5.4
   KERNEL_PATCHVER: 6.1
   KERNEL_TESTING_PATCHVER: 6.1
   PLATFORM: mediatek
@@ -59,9 +60,9 @@ jobs:
     - name: 内核
       run: |
         cd openwrt
-        sed -i 's/KERNEL_PATCHVER:=5.4/KERNEL_PATCHVER:=${KERNEL_PATCHVER}/g' ./target/linux/${PLATFORM}/Makefile
-        sed -i 's/KERNEL_TESTING_PATCHVER:=5.4/KERNEL_TESTING_PATCHVER:=${KERNEL_TESTING_PATCHVER}/g' ./target/linux/${PLATFORM}/Makefile
-        cat ./target/linux/${PLATFORM}/Makefile
+        sed -i 's/KERNEL_PATCHVER:=$KERNEL_ORGIN/KERNEL_PATCHVER:=$KERNEL_PATCHVER/g' ./target/linux/$PLATFORM/Makefile
+        sed -i 's/KERNEL_TESTING_PATCHVER:=$KERNEL_ORGIN/KERNEL_TESTING_PATCHVER:=$KERNEL_TESTING_PATCHVER/g' ./target/linux/$PLATFORM/Makefile
+        cat ./target/linux/$PLATFORM/Makefile
         
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
