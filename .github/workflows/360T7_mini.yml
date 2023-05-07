@@ -104,34 +104,34 @@ jobs:
     - name : 上传附件 整包
       uses: actions/upload-artifact@master
       with:
-        name: 360T7
+        name: 360T7_mini
         path: openwrt/bin/targets/
         
     - name : 附件 packages
       uses: actions/upload-artifact@master
       with:
-        name: 360T7_packages
+        name: 360T7_mini_packages
         path: openwrt/bin/targets/*/*/packages
         if-no-files-found: error
         
     - name : 附件 initramfs-kernel.bin
       uses: actions/upload-artifact@master
       with:
-        name: 360-t7-108M-initramfs-kernel
+        name: 360T7_mini-108M-initramfs-kernel
         path: openwrt/bin/targets/*/*/*initramfs-kernel.bin
         if-no-files-found: error
         
     - name : 附件 squashfs-factory.bin
       uses: actions/upload-artifact@master
       with:
-        name: ${NAME}-108M-squashfs-factory
+        name: 360T7_mini-108M-squashfs-factory
         path: openwrt/bin/targets/*/*/*squashfs-factory.bin
         if-no-files-found: error
         
-    - name : 附件 $NAME_squashfs-sysupgrade
+    - name : 附件 360T7_minisquashfs-sysupgrade
       uses: actions/upload-artifact@master
       with:
-        name: $NAME-108M-squashfs-sysupgrade
+        name: 360T7_mini-108M-squashfs-sysupgrade
         path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
         if-no-files-found: error
       
