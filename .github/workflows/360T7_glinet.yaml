@@ -40,8 +40,7 @@ jobs:
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
         sudo -E apt-get -qq install libc-dev libz-dev \
-                perl rsync subversion unzip  \
-                which libncurses5-dev zlib1g-dev gawk gcc-multilib  \
+                perl rsync subversion unzip libncurses5-dev zlib1g-dev gawk gcc-multilib  \
                 g++-multilib flex gettext libssl-dev ocaml  \
                 sharutils re2c
         sudo -E apt-get -qq autoremove --purge
