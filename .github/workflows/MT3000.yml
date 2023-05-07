@@ -33,13 +33,16 @@ jobs:
         
         
     - name: Initialization environment
+    # sudo -E apt-get install git  asciidoc bash bc binutils bzip2 fastjar flex gawk gcc genisoimage gettext git intltool jikespg libgtk2.0-dev libncurses5-dev libssl-dev make mercurial patch perl-modules python2.7-dev rsync ruby sdcc subversion unzip util-linux wget xsltproc zlib1g-dev zlib1g-dev -y
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
         sudo -E apt-get update
-        sudo -E apt-get install git  asciidoc bash bc binutils bzip2 fastjar flex gawk gcc genisoimage gettext git intltool jikespg libgtk2.0-dev libncurses5-dev libssl-dev make mercurial patch perl-modules python2.7-dev rsync ruby sdcc subversion unzip util-linux wget xsltproc zlib1g-dev zlib1g-dev -y
-
-      
+        sudo apt install binutils bzip2 diff find flex gawk gcc-6+ \
+            getopt grep install libc-dev libz-dev make4.1+ perl python3.6+ \
+            rsync subversion unzip which libncurses5-dev zlib1g-dev gawk \
+            gcc-multilib g++-multilib flex git-core gettext libssl-dev \
+            ocaml sharutils re2c -y
       
     - name:  git clone 【编译 gl-inet/gl-infra-builder.git (无GL.iNet包)
       id: gitclone
