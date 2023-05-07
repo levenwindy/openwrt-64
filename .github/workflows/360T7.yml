@@ -16,7 +16,7 @@ env:
   NAME: 360T7
   ORGIN: 5.4
   NEW_PATCHVER: 5.15
-  NEW_TESTING_PATCHVER: 5.15
+  NEW_TESTING_PATCHVER: 6.1
   PLATFORM: mediatek
 jobs:
   build:
