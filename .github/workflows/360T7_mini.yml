@@ -15,8 +15,9 @@ env:
   TZ: Asia/Shanghai
   NAME: 360T7_mini
   ORGIN: 5.4
-  NEW_PATCHVER: 6.1
-  NEW_TESTING_PATCHVER: 6.1
+  NEW_PATCHVER: 5.15
+  NEW_TESTING_PATCHVER: 5.15
+  # 6.1均失败
   PLATFORM: mediatek
 jobs:
   build:
