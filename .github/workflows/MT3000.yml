@@ -9,7 +9,7 @@ env:
   REPO_URL: https://github.com/gl-inet/gl-infra-builder
   REPO_BRANCH: master
   TZ: Asia/Shanghai
-  NAME: 360T7_glinet
+  NAME: MT3000_glinet
 
 jobs:
   build:
@@ -27,9 +27,9 @@ jobs:
       env:
         # After sign up on the https://ngrok.com/ 
         # You can find this token here: https://dashboard.ngrok.com/get-started/setup
-        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
         # This password you will use when authorizing via SSH
-        USER_PASS: ${{ secrets.USER_PASS_2 }}
+        USER_PASS: ${{ secrets.USER_PASS_1 }}
         
         
     - name: Initialization environment
@@ -80,7 +80,7 @@ jobs:
         git clone https://github.com/gl-inet/glinet4.x.git && \
               cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
               cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml     && \
-              ./scripts/gen_config.py target_mt7981_gl-mt3000 glinet_depends
+              ./scripts/gen_config.py glinet_depends
         
     - name: 查看 .config 
       run: |
