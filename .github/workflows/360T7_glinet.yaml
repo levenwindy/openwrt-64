@@ -80,6 +80,7 @@ jobs:
         cd gl-infra-builder/mt7981
         git clone https://github.com/gl-inet/glinet4.x.git && \
         cp $GITHUB_WORKSPACE/360T7/gl_pkg_config_mt3000.mk ./glinet4.x/mt7981/gl_pkg_config.mk && \
+        cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml && \
         ./scripts/gen_config.py target_mt7981_360t7-108M glinet_depends
         
     - name: .config 进行编译
