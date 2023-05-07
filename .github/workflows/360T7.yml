@@ -55,17 +55,17 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/bash/$DIY_P1_SH
         
-    - name: 内核
-      run: |
-        sed -i 's/KERNEL_PATCHVER:=5.4/KERNEL_PATCHVER:=${KERNEL_PATCHVER}/g' ./target/linux/mediatek/Makefile
-        sed -i 's/KERNEL_TESTING_PATCHVER:=5.4/KERNEL_TESTING_PATCHVER:=${KERNEL_TESTING_PATCHVER}/g' ./target/linux/mediatek/Makefile
-        cat ./target/linux/mediatek/Makefile
-        
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
 
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
+        
+    - name: 内核
+      run: |
+        sed -i 's/KERNEL_PATCHVER:=5.4/KERNEL_PATCHVER:=${KERNEL_PATCHVER}/g' ./target/linux/mediatek/Makefile
+        sed -i 's/KERNEL_TESTING_PATCHVER:=5.4/KERNEL_TESTING_PATCHVER:=${KERNEL_TESTING_PATCHVER}/g' ./target/linux/mediatek/Makefile
+        cat ./target/linux/mediatek/Makefile
 
     - name: Load custom configuration
       run: |
