@@ -16,7 +16,8 @@ env:
   NAME: 360T7
   KERNEL_PATCHVER: 5.15
   KERNEL_TESTING_PATCHVER: 6.1
-
+  PLATFORM: mediatek
+  
 jobs:
   build:
     #runs-on: ubuntu-latest
@@ -63,8 +64,8 @@ jobs:
         
     - name: 内核
       run: |
-        sed -i 's/KERNEL_PATCHVER:=5.4/KERNEL_PATCHVER:=${KERNEL_PATCHVER}/g' ./target/linux/mediatek/Makefile
-        sed -i 's/KERNEL_TESTING_PATCHVER:=5.4/KERNEL_TESTING_PATCHVER:=${KERNEL_TESTING_PATCHVER}/g' ./target/linux/mediatek/Makefile
+        sed -i 's/KERNEL_PATCHVER:=5.4/KERNEL_PATCHVER:=${KERNEL_PATCHVER}/g' ./target/linux/${PLATFORM}/Makefile
+        sed -i 's/KERNEL_TESTING_PATCHVER:=5.4/KERNEL_TESTING_PATCHVER:=${KERNEL_TESTING_PATCHVER}/g' ./target/linux/${PLATFORM}/Makefile
         cat ./target/linux/mediatek/Makefile
 
     - name: Load custom configuration
