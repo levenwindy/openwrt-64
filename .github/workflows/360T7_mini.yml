@@ -88,11 +88,6 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
         
-    - name: 内核2
-      run: |
-        cd openwrt
-        cat  ./target/linux/$PLATFORM/Makefile
-        
     - name: Compile the firmware
       id: compile
        # make -j$(nproc) || make -j1 || make -j1 V=s
