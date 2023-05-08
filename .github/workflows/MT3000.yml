@@ -47,18 +47,17 @@ jobs:
          git clone https://github.com/gl-inet/gl-infra-builder.git && cd gl-infra-builder
          git config --global user.email 'youremail.com'
          git config --global user.name 'name'
-          
-
-    - name:  git checkout
-      run: |
-         cd gl-infra-builder
-         git checkout v4.2.0_mt3000_release1
 
     - name:  list the openwrt verizon
       run: |
          cd gl-infra-builder
          ls configs -hl
     
+    - name:  git checkout1
+      run: |
+        cd gl-infra-builder
+        git checkout v4.2.0_mt3000_release1
+        
     - name: config-mt798x-7.6.6.1.yml
       run: |
          cd gl-infra-builder
@@ -75,17 +74,27 @@ jobs:
    #     cd gl-infra-builder/mt7981
     #    make V=s -j2
         
-    - name:  gen_config.py  修改代码 gl_pkg_config.mk
+    - name:  clone glinet4.x
         # glinet 修改代码
         # cp $GITHUB_WORKSPACE/360T7/gl_pkg_config_mt3000.mk ./glinet4.x/mt7981/gl_pkg_config.mk && \
         # cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
       run: |
         cd gl-infra-builder/mt7981
-        git clone https://github.com/gl-inet/glinet4.x.git && \
-              cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
+        git clone https://github.com/gl-inet/glinet4.x.git
+
+    - name:  git checkout2
+      run: |
+        cd gl-infra-builder/mt7981
+        git checkout v4.2.0_mt3000_release1
+
+    - name:  gen_config.py glinet_depends
+      run: |
+        cd gl-infra-builder/mt7981
+        cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
               cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml     && \
               ./scripts/gen_config.py glinet_depends
-        
+    
+         
     - name: 查看 .config 
       run: |
         cd gl-infra-builder/mt7981
