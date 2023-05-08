@@ -9,7 +9,7 @@ env:
   REPO_URL: https://github.com/gl-inet/gl-infra-builder
   REPO_BRANCH: master
   TZ: Asia/Shanghai
-  NAME: MT3000_glinet
+  NAME: MT-3000_NoGL
 
 jobs:
   build:
@@ -60,35 +60,42 @@ jobs:
          ls configs -hl
 
     - name: config-mt798x-7.6.6.1.yml
+    #python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
       run: |
          cd gl-infra-builder
-         python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
+         python3 setup.py -c configs/config-21.02.2.yml
+
+    - name:  ./scripts/gen_config.py list
+      run: |
+        cd gl-infra-builder/openwrt-21.02/openwrt-21.02.2
+        ./scripts/gen_config.py list 
 
     - name:  target_mt7981_gl-mt3000 luci
       run: |
-        cd gl-infra-builder/mt7981
+        cd gl-infra-builder/openwrt-21.02/openwrt-21.02.2
         ./scripts/gen_config.py target_mt7981_gl-mt3000 luci
 
     - name: 查看 .config 
       run: |
         cd gl-infra-builder/mt7981
         cat .config
+        
+    - name: Don kill instace
+       #if: ${{ failure() }}
+      run: |
+         sleep 3h
 
     # make -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/ || 
     - name: 1.2 编译 
       run: |
-        cd gl-infra-builder/mt7981
-        make V=s -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/
+        cd gl-infra-builder/openwrt-21.02/openwrt-21.02.2
+        make V=s -j2
 
-    # - name: Don kill instace
-    #   if: ${{ failure() }}
-     #  run: |
-       #  sleep 1.5h
        
     - name : 上传附件 target
       uses: actions/upload-artifact@master
       with:
-        name: $NAME
+        name: MT-3000_NoGL
         path: gl-infra-builder/mt7981/bin/
         if-no-files-found: error
         
