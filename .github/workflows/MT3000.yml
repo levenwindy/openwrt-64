@@ -27,9 +27,9 @@ jobs:
       env:
         # After sign up on the https://ngrok.com/ 
         # You can find this token here: https://dashboard.ngrok.com/get-started/setup
-        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
         # This password you will use when authorizing via SSH
-        USER_PASS: ${{ secrets.USER_PASS_1 }}
+        USER_PASS: ${{ secrets.USER_PASS_2 }}
         
         
     - name: Initialization environment
@@ -53,6 +53,11 @@ jobs:
       run: |
          cd gl-infra-builder
          git checkout v4.2.0_mt3000_release1
+
+    - name:  list the openwrt verizon
+      run: |
+         cd gl-infra-builder
+         ls configs -hl
     
     - name: config-mt798x-7.6.6.1.yml
       run: |
