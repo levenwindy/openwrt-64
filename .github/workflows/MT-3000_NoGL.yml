@@ -77,7 +77,7 @@ jobs:
 
     - name: 查看 .config 
       run: |
-        cd gl-infra-builder/mt7981
+        cd gl-infra-builder/openwrt-21.02/openwrt-21.02.2
         cat .config
         
     - name: Don kill instace
