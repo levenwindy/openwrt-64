@@ -27,9 +27,9 @@ jobs:
       env:
         # After sign up on the https://ngrok.com/ 
         # You can find this token here: https://dashboard.ngrok.com/get-started/setup
-        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
         # This password you will use when authorizing via SSH
-        USER_PASS: ${{ secrets.USER_PASS_1 }}
+        USER_PASS: ${{ secrets.USER_PASS_2 }}
         
         
     - name: Initialization environment
@@ -67,10 +67,10 @@ jobs:
          cd gl-infra-builder
          python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
       
-    - name:  target_mt7981_gl-mt3000 luci
-      run: |
-        cd gl-infra-builder/mt7981
-        ./scripts/gen_config.py target_mt7981_gl-mt3000 luci
+    #- name:  target_mt7981_gl-mt3000 luci
+    #  run: |
+    #    cd gl-infra-builder/mt7981
+    #    ./scripts/gen_config.py target_mt7981_gl-mt3000 luci
         
    # - name: 1.1 编译 make manuconfig
      # Prevent to killing instance after failure
@@ -86,17 +86,12 @@ jobs:
         cd gl-infra-builder/mt7981
         git clone https://github.com/gl-inet/glinet4.x.git
 
-    - name:  git checkout2
-      run: |
-        cd gl-infra-builder/mt7981
-        git checkout v4.2.0_mt3000_release1
-
     - name:  gen_config.py glinet_depends
       run: |
         cd gl-infra-builder/mt7981
         cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
-              cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml     && \
-              ./scripts/gen_config.py glinet_depends
+            cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml     && \
+            ./scripts/gen_config.py glinet_depends
     
          
     - name: 查看 .config 
@@ -108,12 +103,13 @@ jobs:
     - name: 1.2 编译 
       run: |
         cd gl-infra-builder/mt7981
-        make V=s -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/
-        
-    # - name: Don kill instace
-    #   if: ${{ failure() }}
-     #  run: |
-       #  sleep 1.5h
+        make -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/
+    
+    - name:  Don kill instace
+      if: ${{ failure() }}
+      run: |
+        cd gl-infra-builder/mt7981
+        make V=s -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/ 
 
         
     - name : 上传附件 target
