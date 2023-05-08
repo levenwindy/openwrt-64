@@ -3,7 +3,7 @@ name: Build MT-3000_NoGL
 on:
   push:
     paths:
-      - '.github/workflows/MT3000.yml'
+      - '.github/workflows/MT-3000_NoGL.yml'
       
 env:
   REPO_URL: https://github.com/gl-inet/gl-infra-builder
