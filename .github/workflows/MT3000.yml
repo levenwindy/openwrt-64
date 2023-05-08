@@ -51,6 +51,7 @@ jobs:
 
     - name:  git checkout
       run: |
+         cd gl-infra-builder
          git checkout v4.2.0_mt3000_release1
     
     - name: config-mt798x-7.6.6.1.yml
