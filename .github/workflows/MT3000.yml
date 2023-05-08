@@ -47,7 +47,12 @@ jobs:
          git clone https://github.com/gl-inet/gl-infra-builder.git && cd gl-infra-builder
          git config --global user.email 'youremail.com'
          git config --global user.name 'name'
-        
+          
+
+    - name:  git checkout
+      run: |
+         git checkout v4.2.0_mt3000_release1
+    
     - name: config-mt798x-7.6.6.1.yml
       run: |
          cd gl-infra-builder
