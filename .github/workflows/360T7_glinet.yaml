@@ -13,8 +13,8 @@ env:
   # true
   SSH: true
   MAKECONFIG: false
-  NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
-  USER_PASS: ${{ secrets.USER_PASS_2 }}
+  NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
+  USER_PASS: ${{ secrets.USER_PASS_1 }}
   MODEL: mt7981
   PLATFORM: mediatek
   CONFIG: config-mt798x-7.6.6.1.yml
@@ -95,9 +95,9 @@ jobs:
 
     - name: DIY_P1_SH feeds.conf.default
       run: |
-        chmod +x $DIY_P1_SH
+        chmod +x bash/$DIY_P1_SH
         cd gl-infra-builder/$MODEL
-        $GITHUB_WORKSPACE/$DIY_P1_SH
+        $GITHUB_WORKSPACE/bash/$DIY_P1_SH
         cat feeds.conf.default
          
     - name: mt7981_360t7-108M luci
