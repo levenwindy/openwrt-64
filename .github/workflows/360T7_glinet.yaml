@@ -11,7 +11,7 @@ env:
   TZ: Asia/Shanghai
   NAME: 360T7_glinet
   # true
-  SSH: t
+  SSH: true
   MAKECONFIG: false
   NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
   USER_PASS: ${{ secrets.USER_PASS_1 }}
@@ -115,7 +115,7 @@ jobs:
         git clone https://github.com/gl-inet/glinet4.x.git && \
             cp ./glinet4.x/pkg_config/$GL_PKG_CONFIG  ./glinet4.x/$MODEL/gl_pkg_config.mk && \
             cp ./glinet4.x/pkg_config/$GLINET_DEPENDS  ./profiles/glinet_depends.yml && \
-            ./scripts/gen_config.py target_mt7981_gl-mt3000 glinet_depends
+            ./scripts/gen_config.py  glinet_depends
 
     - name: 查看 .config 
       run: |
