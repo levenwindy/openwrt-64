@@ -116,13 +116,16 @@ jobs:
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         cd gl-infra-builder/$MODEL
         make -j$NPROC  GL_PKGDIR=`pwd`/glinet4.x/$MODEL/
+        echo "::set-output name=status::success"
 
     - name:  failure  make -j1
-      if: ${{ failure() }}
+      if: steps.tag.outputs.status == 'success' && cancelled()
       run: |
         df -h
         cd gl-infra-builder/$MODEL
         make -j1  GL_PKGDIR=`pwd`/glinet4.x/$MODEL/  
+        echo "::set-output name=status::success"
+        
 
     - name:  df -h
       if: ${{ failure() }}
@@ -130,6 +133,12 @@ jobs:
         cd gl-infra-builder/$MODEL
         df -h
         du -ah -d1
+    
+
+    - name:  SLEEP
+      if: ${{ failure() }}
+      run: |
+        sleep 3h
 
     - name : 附件 360T7_glinet
       uses: actions/upload-artifact@master
