@@ -11,10 +11,10 @@ env:
   TZ: Asia/Shanghai
   NAME: MT3000_glinet
   # true
-  SSH: true
+  SSH: false
   MAKECONFIG: false
-  NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
-  USER_PASS: ${{ secrets.USER_PASS_2 }}
+  NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
+  USER_PASS: ${{ secrets.USER_PASS_1 }}
   PLARFORM: mt7981
   CONFIG: config-mt798x-7.6.6.1.yml
   GL_PKG_CONFIG: gl_pkg_config_mt3000.mk
@@ -49,7 +49,8 @@ jobs:
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get update
         sudo -E apt-get -qq install build-essential libncurses5-dev gawk git libssl-dev \
-            gettext zlib1g-dev swig unzip time rsync python3 python3-setuptools python3-yaml
+            gettext zlib1g-dev swig unzip time rsync python3 python3-setuptools python3-yaml \
+            libp11-kit-dev clang flex bison g++ gcc-multilib g++-multilib python3-distutils file wget qemu-utils
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
@@ -96,6 +97,7 @@ jobs:
         
     - name: 查看 .config 
       run: |
+        df -h
         cd gl-infra-builder/$PLARFORM
         cat .config
         
@@ -106,6 +108,13 @@ jobs:
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         cd gl-infra-builder/$PLARFORM
         make -j$(nproc)  GL_PKGDIR=`pwd`/glinet4.x/$PLARFORM/ 
+    
+    - name:  failure  make -j1
+      if: ${{ failure() }}
+      run: |
+        df -h
+        cd gl-infra-builder/$PLARFORM
+        make -j1  GL_PKGDIR=`pwd`/glinet4.x/$PLARFORM/ 
     
     - name:  df -h
       if: ${{ failure() }}
