@@ -11,7 +11,7 @@ env:
   TZ: Asia/Shanghai
   NAME: 360T7_glinet
   # true
-  SSH: true
+  SSH: tru
   MAKECONFIG: false
   NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
   USER_PASS: ${{ secrets.USER_PASS_1 }}
