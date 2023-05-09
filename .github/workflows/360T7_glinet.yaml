@@ -21,7 +21,7 @@ env:
   GL_PKG_CONFIG: gl_pkg_config_mt3000.mk
   GLINET_DEPENDS: glinet_depends_mt3000.yml
   TARGET: target_mt7981_360t7-108M
-  NPROC: 1
+  NPROC: $(nproc)
   # NPROC 线程数 $(nproc)
   
 jobs:
