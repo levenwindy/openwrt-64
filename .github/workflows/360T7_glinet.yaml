@@ -162,7 +162,7 @@ jobs:
 
         path: gl-infra-builder/$MODEL/bin/targets/$PLATFORM/$MODEL/*squashfs-sysupgrade.tar
         if-no-files-found: error
-	
+
     - name : packages
       uses: actions/upload-artifact@master
       with:
