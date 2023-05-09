@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/360T7_glinet.yaml'
-       
+
 env:
   REPO_URL: https://github.com/FUjr/gl-infra-builder
   REPO_BRANCH: master
