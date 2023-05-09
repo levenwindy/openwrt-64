@@ -10,7 +10,8 @@ env:
   REPO_BRANCH: master
   TZ: Asia/Shanghai
   NAME: MT3000_glinet
-  SSH: true
+  # true
+  SSH: false
   MAKECONFIG: false
   NGROK_TOKEN_id: 2 
   PLARFORM: mt7981
