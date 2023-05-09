@@ -23,7 +23,7 @@ env:
 jobs:
   build:
     #runs-on: ubuntu-latest 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-18.04
     # runs-on: ubuntu-20.04
 
     steps:
@@ -37,18 +37,22 @@ jobs:
       env:
         # After sign up on the https://ngrok.com/ 
         # You can find this token here: https://dashboard.ngrok.com/get-started/setup
-        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
         # This password you will use when authorizing via SSH
-        USER_PASS: ${{ secrets.USER_PASS_1 }}
+        USER_PASS: ${{ secrets.USER_PASS_2 }}
         
     - name: Initialization environment
     # sudo -E apt-get install git  asciidoc bash bc binutils bzip2 fastjar flex gawk gcc genisoimage gettext git intltool jikespg libgtk2.0-dev libncurses5-dev libssl-dev make mercurial patch perl-modules python2.7-dev rsync ruby sdcc subversion unzip util-linux wget xsltproc zlib1g-dev zlib1g-dev -y
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get update
         sudo -E apt-get -qq install build-essential libncurses5-dev gawk git libssl-dev \
             gettext zlib1g-dev swig unzip time rsync python3 python3-setuptools python3-yaml
+        sudo -E apt-get -qq autoremove --purge
+        sudo -E apt-get -qq clean
+        sudo timedatectl set-timezone "$TZ"
     
     - name:  git clone gl-infra-builder
       id: gitclone
@@ -82,6 +86,7 @@ jobs:
     - name:  gen_config.py glinet_depends
        #     cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml     && \
       run: |
+        df -h
         cd gl-infra-builder/$PLARFORM
         git clone https://github.com/gl-inet/glinet4.x.git && \
             cp ./glinet4.x/pkg_config/$GL_PKG_CONFIG  ./glinet4.x/$PLARFORM/gl_pkg_config.mk && \
@@ -94,7 +99,7 @@ jobs:
         cd gl-infra-builder/$PLARFORM
         cat .config
         
-        # || make V=s -j1  GL_PKGDIR=`pwd`/glinet4.x/$PLARFORM/
+    # || make V=s -j1  GL_PKGDIR=`pwd`/glinet4.x/$PLARFORM/
     # make -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/ || 
     - name: 1.2 编译 
       run: |
