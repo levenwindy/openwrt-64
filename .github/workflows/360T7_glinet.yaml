@@ -11,7 +11,7 @@ env:
   TZ: Asia/Shanghai
   NAME: 360T7_glinet
   # true
-  SSH: tru
+  SSH: true
   MAKECONFIG: false
   NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
   USER_PASS: ${{ secrets.USER_PASS_1 }}
@@ -155,41 +155,40 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: 360T7_glinet
-        path: gl-infra-builder/$MODEL/bin/
+        path: gl-infra-builder/mt7981/bin/
         if-no-files-found: error
 
     - name : PACKAGES-All
       uses: actions/upload-artifact@master
       with:
         name: 360T7_glinet_PACKAGES-All
-        path: gl-infra-builder/$MODEL/bin/packages
+        path: gl-infra-builder/mt7981/bin/packages
         if-no-files-found: error
 
     - name : squashfs-factory.img
       uses: actions/upload-artifact@master
       with:
         name: 360T7_glinet_squashfs-factory
-        path: gl-infra-builder/$MODEL/bin/targets/$PLATFORM/$MODEL/*squashfs-factory.img
+        path: gl-infra-builder/mt7981/bin/targets/*/*/*squashfs-factory.img
         if-no-files-found: error
 
     - name : initramfs-kernel.bin
       uses: actions/upload-artifact@master
       with:
         name: 360T7_glinet_initramfs-kernel
-        path: gl-infra-builder/$MODEL/bin/targets/$PLATFORM/$MODEL/*initramfs-kernel.bin
+        path: gl-infra-builder/mt7981/bin/targets/*/*/*initramfs-kernel.bin
         if-no-files-found: error
 
     - name : squashfs-sysupgrade.tar
       uses: actions/upload-artifact@master
       with:
         name: 360T7_glinet_squashfs-sysupgrade
-
-        path: gl-infra-builder/$MODEL/bin/targets/$PLATFORM/$MODEL/*squashfs-sysupgrade.tar
+        path: gl-infra-builder/mt7981/bin/targets/*/*/*squashfs-sysupgrade.tar
         if-no-files-found: error
 
     - name : packages
       uses: actions/upload-artifact@master
       with:
         name: 360T7_glinet_packages
-        path: gl-infra-builder/$MODEL/bin/targets/$PLATFORM/$MODEL/packages
+        path: gl-infra-builder/mt7981/bin/targets/*/*/packages
         if-no-files-found: error
