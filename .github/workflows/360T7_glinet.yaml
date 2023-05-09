@@ -21,7 +21,7 @@ env:
   GL_PKG_CONFIG: gl_pkg_config_mt3000.mk
   GLINET_DEPENDS: glinet_depends_mt3000.yml
   TARGET: target_mt7981_360t7-108M
-  NPROC: $(nproc)
+  NPROC: 1
   # NPROC 线程数 $(nproc)
   
 jobs:
@@ -92,7 +92,7 @@ jobs:
          
     - name: mt7981_360t7-108M luci
       run: |
-         cd gl-infra-builder/
+         cd gl-infra-builder/$MODEL
          ./scripts/gen_config.py $TARGET luci  
          
     - name:  gen_config.py glinet_depends
