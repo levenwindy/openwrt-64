@@ -13,7 +13,11 @@ env:
   SSH: true
   MAKECONFIG: false
   NGROK_TOKEN_id: 2 
-
+  PLARFORM: mt7981
+  CONFIG: config-mt798x-7.6.6.1.yml
+  GL_PKG_CONFIG: gl_pkg_config_mt3000.mk
+  GLINET_DEPENDS: glinet_depends_mt3000.yml
+  
 jobs:
   build:
     #runs-on: ubuntu-latest 
@@ -31,9 +35,9 @@ jobs:
       env:
         # After sign up on the https://ngrok.com/ 
         # You can find this token here: https://dashboard.ngrok.com/get-started/setup
-        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
         # This password you will use when authorizing via SSH
-        USER_PASS: ${{ secrets.USER_PASS_2 }}
+        USER_PASS: ${{ secrets.USER_PASS_1 }}
         
         
     - name: Initialization environment
@@ -65,44 +69,45 @@ jobs:
     - name: config-mt798x-7.6.6.1.yml
       run: |
          cd gl-infra-builder
-         python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
+         python3 setup.py -c configs/$CONFIG
          
     - name: 编译 make manuconfig
       if: env.MAKECONFIG == 'true' 
      #  make manuconfig
       run: |
-        cd gl-infra-builder/mt7981
+        cd gl-infra-builder/$PLARFORM
         sleep 3h
         
     - name:  gen_config.py glinet_depends
        #     cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml     && \
       run: |
-        cd gl-infra-builder/mt7981
+        cd gl-infra-builder/$PLARFORM
         git clone https://github.com/gl-inet/glinet4.x.git && \
-            cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
-            cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml && \
+            cp ./glinet4.x/pkg_config/$GL_PKG_CONFIG  ./glinet4.x/$PLARFORM/gl_pkg_config.mk && \
+            cp ./glinet4.x/pkg_config/$GLINET_DEPENDS  ./profiles/glinet_depends.yml && \
             ./scripts/gen_config.py glinet_depends
             
+        
     - name: 查看 .config 
       run: |
-        cd gl-infra-builder/mt7981
+        cd gl-infra-builder/$PLARFORM
         cat .config
         
     # make -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/ || 
     - name: 1.2 编译 
       run: |
-        cd gl-infra-builder/mt7981
-        make -j$(nproc)  GL_PKGDIR=`pwd`/glinet4.x/mt7981/ || make V=s -j1  GL_PKGDIR=`pwd`/glinet4.x/mt7981/
+        cd gl-infra-builder/$PLARFORM
+        make -j$(nproc)  GL_PKGDIR=`pwd`/glinet4.x/$PLARFORM/ || make V=s -j1  GL_PKGDIR=`pwd`/glinet4.x/$PLARFORM/
     
-    - name:  Don kill instace
-      if: ${{ failure() }}
-      run: |
-        sleep 1h
+ #   - name:  Don kill instace
+ #     if: ${{ failure() }}
+  #    run: |
+   #     sleep 1h
         
     - name : 上传附件 target
       uses: actions/upload-artifact@master
       with:
-        name: $NAME
+        name: MT3000
         path: gl-infra-builder/mt7981/bin/
         if-no-files-found: error
         
