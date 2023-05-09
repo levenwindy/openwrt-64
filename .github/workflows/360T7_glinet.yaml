@@ -133,7 +133,6 @@ jobs:
         cd gl-infra-builder/$MODEL
         df -h
         du -ah -d1
-    
 
     - name:  SLEEP
       if: ${{ failure() }}
