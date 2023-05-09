@@ -11,9 +11,8 @@ env:
   TZ: Asia/Shanghai
   NAME: MT3000_glinet
   # true
-  SSH: false
+  SSH: true
   MAKECONFIG: false
-  SSH2: true
   NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
   USER_PASS: ${{ secrets.USER_PASS_2 }}
   PLARFORM: mt7981
@@ -41,12 +40,6 @@ jobs:
         NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
         # This password you will use when authorizing via SSH
         USER_PASS: ${{ secrets.USER_PASS_1 }}
-        
-    - name: SSH2
-      if: env.SSH2 == 'true'
-      run: |
-        bash bash/ssh-server.sh $NNGROK_TOKEN  $USER_PASS
-        
         
     - name: Initialization environment
     # sudo -E apt-get install git  asciidoc bash bc binutils bzip2 fastjar flex gawk gcc genisoimage gettext git intltool jikespg libgtk2.0-dev libncurses5-dev libssl-dev make mercurial patch perl-modules python2.7-dev rsync ruby sdcc subversion unzip util-linux wget xsltproc zlib1g-dev zlib1g-dev -y
@@ -101,16 +94,19 @@ jobs:
         cd gl-infra-builder/$PLARFORM
         cat .config
         
+        # || make V=s -j1  GL_PKGDIR=`pwd`/glinet4.x/$PLARFORM/
     # make -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/ || 
     - name: 1.2 编译 
       run: |
         cd gl-infra-builder/$PLARFORM
-        make -j$(nproc)  GL_PKGDIR=`pwd`/glinet4.x/$PLARFORM/ || make V=s -j1  GL_PKGDIR=`pwd`/glinet4.x/$PLARFORM/
+        make -j$(nproc)  GL_PKGDIR=`pwd`/glinet4.x/$PLARFORM/ 
     
- #   - name:  Don kill instace
- #     if: ${{ failure() }}
-  #    run: |
-   #     sleep 1h
+    - name:  df -h
+      if: ${{ failure() }}
+      run: |
+        cd gl-infra-builder/$PLARFORM
+        df -h
+        du -ah -d1
         
     - name : 上传附件 target
       uses: actions/upload-artifact@master
