@@ -13,8 +13,8 @@ env:
   # true
   SSH: true
   MAKECONFIG: false
-  NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
-  USER_PASS: ${{ secrets.USER_PASS_1 }}
+  NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
+  USER_PASS: ${{ secrets.USER_PASS_2 }}
   MODEL: mt7981
   PLATFORM: mediatek
   CONFIG: config-mt798x-7.6.6.1.yml
