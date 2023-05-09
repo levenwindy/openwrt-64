@@ -12,7 +12,7 @@ env:
   NAME: MT3000_glinet
   SSH: true
   MAKECONFIG: false
-  NGROK_TOKEN_id: 2
+  NGROK_TOKEN_id: 2 
 
 jobs:
   build:
