@@ -21,15 +21,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
        
-   # - name: Start SSH via Ngrok
+    - name: Start SSH via Ngrok
       #if: ${{ failure() }}
-  #    run: curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
-  #    env:
+      run: curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
+      env:
         # After sign up on the https://ngrok.com/ 
         # You can find this token here: https://dashboard.ngrok.com/get-started/setup
-       # NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
         # This password you will use when authorizing via SSH
-   #     USER_PASS: ${{ secrets.USER_PASS_1 }}
+        USER_PASS: ${{ secrets.USER_PASS_1 }}
         
         
     - name: Initialization environment
@@ -41,7 +41,7 @@ jobs:
         sudo -E apt-get -qq install build-essential libncurses5-dev gawk git libssl-dev \
             gettext zlib1g-dev swig unzip time rsync python3 python3-setuptools python3-yaml
     
-    - name:  git clone 【编译 gl-inet/gl-infra-builder.git (无GL.iNet包)
+    - name:  git clone gl-infra-builder
       id: gitclone
       run: |
          git clone https://github.com/gl-inet/gl-infra-builder.git && cd gl-infra-builder
@@ -63,11 +63,12 @@ jobs:
          cd gl-infra-builder
          python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
          
-   # - name: 1.1 编译 make manuconfig
+    - name: 1.1 编译 make manuconfig
+     # make manuconfig
      # Prevent to killing instance after failure
-   #   run: |
-   #     cd gl-infra-builder/mt7981
-    #    make manuconfig
+      run: |
+        cd gl-infra-builder/mt7981
+        sleep 3h
     
   # 3. 加入自己需要的软件包
    # a. 执行完第2步之后，可以通过make menuconfig菜单选择自己的软件包
@@ -75,25 +76,16 @@ jobs:
   #      https://forum.gl-inet.cn/forum.p ... &pid=2710&fromuid=1
    #     https://forum.gl-inet.cn/forum.p ... id=6&extra=page%3D1
 
-  #  - name:  target_mt7981_gl-mt3000 luci
-   #   run: |
-    #    cd gl-infra-builder/mt7981
-    #    ./scripts/gen_config.py target_mt7981_gl-mt3000 luci
-        
-        
-    - name:  clone glinet4.x
         # glinet 修改代码
         # cp $GITHUB_WORKSPACE/360T7/gl_pkg_config_mt3000.mk ./glinet4.x/mt7981/gl_pkg_config.mk && \
         # cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
-      run: |
-        cd gl-infra-builder/mt7981
-        git clone https://github.com/gl-inet/glinet4.x.git
 
     - name:  gen_config.py glinet_depends
        #     cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml     && \
       run: |
         cd gl-infra-builder/mt7981
-        cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
+        git clone https://github.com/gl-inet/glinet4.x.git && \
+            cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
             cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml && \
             ./scripts/gen_config.py glinet_depends
     
