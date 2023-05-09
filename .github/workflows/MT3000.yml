@@ -13,7 +13,9 @@ env:
   # true
   SSH: false
   MAKECONFIG: false
-  NGROK_TOKEN_id: 2 
+  SSH2: true
+  NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
+  USER_PASS: ${{ secrets.USER_PASS_2 }}
   PLARFORM: mt7981
   CONFIG: config-mt798x-7.6.6.1.yml
   GL_PKG_CONFIG: gl_pkg_config_mt3000.mk
@@ -39,6 +41,11 @@ jobs:
         NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
         # This password you will use when authorizing via SSH
         USER_PASS: ${{ secrets.USER_PASS_1 }}
+        
+    - name: SSH2
+      if: env.SSH2 == 'true'
+      run: |
+        bash bash/ssh-server.sh $NNGROK_TOKEN  $USER_PASS
         
         
     - name: Initialization environment
