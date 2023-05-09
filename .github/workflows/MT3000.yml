@@ -10,7 +10,8 @@ env:
   REPO_BRANCH: master
   TZ: Asia/Shanghai
   NAME: MT3000_glinet
-  SSH: false
+  SSH: true
+  MAKECONFIG: true
 
 jobs:
   build:
@@ -64,23 +65,13 @@ jobs:
          cd gl-infra-builder
          python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
          
-    - name: 1.1 编译 make manuconfig
-     # make manuconfig
-     # Prevent to killing instance after failure
+    - name: 编译 make manuconfig
+      if: env.MAKECONFIG == 'true' 
+     #  make manuconfig
       run: |
         cd gl-infra-builder/mt7981
         sleep 3h
-    
-  # 3. 加入自己需要的软件包
-   # a. 执行完第2步之后，可以通过make menuconfig菜单选择自己的软件包
-  #  b. 或者直接在2步中gen_config的阶段直接加入自己的配置，具体可以参考以下俩个链接
-  #      https://forum.gl-inet.cn/forum.p ... &pid=2710&fromuid=1
-   #     https://forum.gl-inet.cn/forum.p ... id=6&extra=page%3D1
-
-        # glinet 修改代码
-        # cp $GITHUB_WORKSPACE/360T7/gl_pkg_config_mt3000.mk ./glinet4.x/mt7981/gl_pkg_config.mk && \
-        # cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
-
+        
     - name:  gen_config.py glinet_depends
        #     cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml     && \
       run: |
@@ -89,8 +80,7 @@ jobs:
             cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
             cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml && \
             ./scripts/gen_config.py glinet_depends
-    
-         
+            
     - name: 查看 .config 
       run: |
         cd gl-infra-builder/mt7981
@@ -105,8 +95,7 @@ jobs:
     - name:  Don kill instace
       if: ${{ failure() }}
       run: |
-        sleep 2h
-
+        sleep 1h
         
     - name : 上传附件 target
       uses: actions/upload-artifact@master
