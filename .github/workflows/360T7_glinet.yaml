@@ -22,6 +22,8 @@ env:
   GLINET_DEPENDS: glinet_depends_mt3000.yml
   TARGET: target_mt7981_360t7-108M
   NPROC: 1
+  DIY_P1_SH: diy-360T7_glinet.sh
+  DIY_P2_SH: diy-immortalwrt.sh
   # NPROC 线程数 $(nproc)
   
 jobs:
@@ -68,6 +70,7 @@ jobs:
          cd gl-infra-builder 
          git config --global user.email 'youremail.com'
          git config --global user.name 'your name'
+         
 
     - name:  list the openwrt verizon
       run: |
@@ -89,11 +92,19 @@ jobs:
       run: |
          cd gl-infra-builder/
          python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
+
+    - name: DIY_P1_SH feeds.conf.default
+      run: |
+        chmod +x $DIY_P1_SH
+        cd gl-infra-builder/$MODEL
+        $GITHUB_WORKSPACE/$DIY_P1_SH
+        cat feeds.conf.default
          
     - name: mt7981_360t7-108M luci
       run: |
          cd gl-infra-builder/$MODEL
          ./scripts/gen_config.py $TARGET luci  
+         
          
     - name:  gen_config.py glinet_depends
        #     cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml     && \
