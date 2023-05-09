@@ -108,13 +108,14 @@ jobs:
          
     - name:  gen_config.py glinet_depends
        #     cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml     && \
+         #   ./scripts/gen_config.py $TARGET  glinet_depends
       run: |
         df -h
         cd gl-infra-builder/$MODEL
         git clone https://github.com/gl-inet/glinet4.x.git && \
             cp ./glinet4.x/pkg_config/$GL_PKG_CONFIG  ./glinet4.x/$MODEL/gl_pkg_config.mk && \
             cp ./glinet4.x/pkg_config/$GLINET_DEPENDS  ./profiles/glinet_depends.yml && \
-            ./scripts/gen_config.py $TARGET  glinet_depends
+            ./scripts/gen_config.py target_mt7981_gl-mt3000 glinet_depends
 
     - name: 查看 .config 
       run: |
