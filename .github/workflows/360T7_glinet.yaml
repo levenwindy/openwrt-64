@@ -10,6 +10,19 @@ env:
   REPO_BRANCH: master
   TZ: Asia/Shanghai
   NAME: 360T7_glinet
+  # true
+  SSH: true
+  MAKECONFIG: false
+  NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
+  USER_PASS: ${{ secrets.USER_PASS_1 }}
+  MODEL: mt7981
+  PLATFORM: mediatek
+  CONFIG: config-mt798x-7.6.6.1.yml
+  GL_PKG_CONFIG: gl_pkg_config_mt3000.mk
+  GLINET_DEPENDS: glinet_depends_mt3000.yml
+  TARGET: target_mt7981_360t7-108M
+  NPROC: 1
+  # NPROC 线程数 $(nproc)
 
 jobs:
   build:
@@ -21,15 +34,16 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
        
-   # - name: Start SSH via Ngrok
-      #if: ${{ failure() }}
-   #   run: curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
-   #   env:
+    - name: Start SSH via Ngrok
+      if: env.SSH == 'true'
+      run: |
+        curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
+      env:
         # After sign up on the https://ngrok.com/ 
         # You can find this token here: https://dashboard.ngrok.com/get-started/setup
-     #   NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
         # This password you will use when authorizing via SSH
-      #  USER_PASS: ${{ secrets.USER_PASS_2 }}
+        USER_PASS: ${{ secrets.USER_PASS_1 }}
         
         
     - name: Initialization environment
@@ -40,71 +54,118 @@ jobs:
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib \
-                  gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget qemu-utils
-      
+        sudo -E apt-get -qq install build-essential libncurses5-dev gawk git libssl-dev \
+            gettext zlib1g-dev swig unzip time rsync python3 python3-setuptools python3-yaml
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
       
-      
     - name:  git clone 【编译360t7-108M OpenWrt固件(无GL.iNet包)
       id: gitclone
       run: |
-         git clone https://github.com/FUjr/gl-infra-builder.git
+         git clone $REPO_URL
          cd gl-infra-builder 
          git config --global user.email 'youremail.com'
          git config --global user.name 'your name'
+
+    - name:  list the openwrt verizon
+      run: |
+         cd gl-infra-builder
+         ls configs -hl
+    
+   # - name:  git checkout1
+   #   run: |
+    #    cd gl-infra-builder
+    #    git checkout v4.2.0_mt3000_release1
+    - name: 编译 make manuconfig
+      if: env.MAKECONFIG == 'true' 
+     #  make manuconfig
+      run: |
+        cd gl-infra-builder/$MODEL
+        sleep 0.5h
         
     - name: config-mt798x-7.6.6.1.yml
       run: |
          cd gl-infra-builder/
          python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
-      
-    - name:  gen_config.py target_mt7981_360t7-108M luci # make menuconfig 
-      run: |
-        cd gl-infra-builder/mt7981
-        ./scripts/gen_config.py target_mt7981_360t7-108M luci
         
-  #  - name: 编译 make manuconfig
-     # Prevent to killing instance after failure
-   #   run: |
-   #     sleep 1.5h
-        
-    - name:  gen_config.py  修改代码 gl_pkg_config.mk
-        # glinet 修改代码
-        # cp $GITHUB_WORKSPACE/360T7/gl_pkg_config_mt3000.mk ./glinet4.x/mt7981/gl_pkg_config.mk && \
-        # cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
+    - name:  gen_config.py glinet_depends
+       #     cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml     && \
       run: |
-        cd gl-infra-builder/mt7981
+        df -h
+        cd gl-infra-builder/$MODEL
         git clone https://github.com/gl-inet/glinet4.x.git && \
-        cp ./glinet4.x/pkg_config/gl_pkg_config_mt3000.mk  ./glinet4.x/mt7981/gl_pkg_config.mk && \
-        cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml && \
-        ./scripts/gen_config.py target_mt7981_360t7-108M glinet_depends
-        
-    - name: .config 进行编译
+            cp ./glinet4.x/pkg_config/$GL_PKG_CONFIG  ./glinet4.x/$MODEL/gl_pkg_config.mk && \
+            cp ./glinet4.x/pkg_config/$GLINET_DEPENDS  ./profiles/glinet_depends.yml && \
+            ./scripts/gen_config.py $TARGET  glinet_depends
+            
+    - name: 查看 .config 
       run: |
-        cd gl-infra-builder/mt7981
+        df -h
+        cd gl-infra-builder/$MODEL
         cat .config
-    
-    - name: make 编译 
-      run: |
-        cd gl-infra-builder/mt7981
-        make V=s -j2 GL_PKGDIR=./glinet4.x/mt7981/ 
         
-    - name: Don kill instace
+    - name: 1.2 编译 
+      run: |
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+        cd gl-infra-builder/$MODEL
+        make -j$NPROC  GL_PKGDIR=`pwd`/glinet4.x/$MODEL/
+        
+    - name:  failure  make -j1
       if: ${{ failure() }}
       run: |
-        sleep 1.5h
+        df -h
+        cd gl-infra-builder/$MODEL
+        make -j1  GL_PKGDIR=`pwd`/glinet4.x/$MODEL/  
+    
+    - name:  df -h
+      if: ${{ failure() }}
+      run: |
+        cd gl-infra-builder/$MODEL
+        df -h
+        du -ah -d1
+        3h
 
-        
-    - name : 上传附件 target
+    - name : 附件 360T7_glinet
       uses: actions/upload-artifact@master
       with:
-        name: $NAME
-        path: gl-infra-builder/mt7981/bin/
+        name: 360T7_glinet
+        path: gl-infra-builder/$MODEL/bin/
         if-no-files-found: error
-        
-  
+		
+    - name : PACKAGES-All
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_glinet_PACKAGES-All
+        path: gl-infra-builder/$MODEL/bin/packages
+        if-no-files-found: error
+
+    - name : squashfs-factory.img
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_glinet_squashfs-factory
+        path: gl-infra-builder/$MODEL/bin/targets/$PLATFORM/$MODEL/*squashfs-factory.img
+        if-no-files-found: error
+		
+    - name : initramfs-kernel.bin
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_glinet_initramfs-kernel
+        path: gl-infra-builder/$MODEL/bin/targets/$PLATFORM/$MODEL/*initramfs-kernel.bin
+        if-no-files-found: error
+		
+    - name : squashfs-sysupgrade.tar
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_glinet_squashfs-sysupgrade
+        path: gl-infra-builder/$MODEL/bin/targets/$PLATFORM/$MODEL/*squashfs-sysupgrade.tar
+        if-no-files-found: error
+		
+    - name : packages
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_glinet_packages
+        path: gl-infra-builder/$MODEL/bin/targets/$PLATFORM/$MODEL/packages
+        if-no-files-found: error
