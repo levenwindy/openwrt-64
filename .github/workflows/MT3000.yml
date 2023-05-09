@@ -23,7 +23,7 @@ env:
 jobs:
   build:
     #runs-on: ubuntu-latest 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     # runs-on: ubuntu-20.04
 
     steps:
@@ -103,6 +103,7 @@ jobs:
     # make -j2 GL_PKGDIR=`pwd`/glinet4.x/mt7981/ || 
     - name: 1.2 编译 
       run: |
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         cd gl-infra-builder/$PLARFORM
         make -j$(nproc)  GL_PKGDIR=`pwd`/glinet4.x/$PLARFORM/ 
     
