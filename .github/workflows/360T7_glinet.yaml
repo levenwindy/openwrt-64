@@ -89,7 +89,12 @@ jobs:
       run: |
          cd gl-infra-builder/
          python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
-
+         
+    - name: mt7981_360t7-108M luci
+      run: |
+         cd gl-infra-builder/
+         ./scripts/gen_config.py $TARGET luci  
+         
     - name:  gen_config.py glinet_depends
        #     cp ./glinet4.x/pkg_config/glinet_depends_mt3000.yml  ./profiles/glinet_depends.yml     && \
       run: |
