@@ -127,7 +127,7 @@ jobs:
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         cd gl-infra-builder/$MODEL
-        make -j$NPROC  GL_PKGDIR=`pwd`/glinet4.x/$MODEL/
+        make -j$(nproc)  GL_PKGDIR=`pwd`/glinet4.x/$MODEL/
         echo "::set-output name=status::success"
 
     - name:  failure  make -j1
