@@ -131,11 +131,9 @@ jobs:
         echo "::set-output name=status::success"
 
     - name: 1.2 编译 
-      if: steps.tag.outputs.status == 'success'NPROC
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         cd gl-infra-builder/$MODEL
-        
         if [ $NPROC -eq "true" ]; then   make -j$(nproc)  GL_PKGDIR=`pwd`/glinet4.x/$MODEL/ ; else    make -j1  GL_PKGDIR=`pwd`/glinet4.x/$MODEL/ ; fi
         echo "::set-output name=status::success"
         
