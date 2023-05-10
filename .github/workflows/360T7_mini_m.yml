@@ -105,11 +105,12 @@ jobs:
         find dl -size -1024c -exec rm -f {} \;
         
     - name: Compile the firmware
+        # if [ $NPROC -eq true ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
       id: compile
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
-        if [ $NPROC -eq "true" ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
+        make -j$(nproc) || make -j1 
         echo "::set-output name=status::success"
          
     - name : 上传附件 整包
