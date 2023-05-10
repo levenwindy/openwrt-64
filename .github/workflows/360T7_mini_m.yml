@@ -111,7 +111,15 @@ jobs:
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
-        if [ $NPROC -eq 0 ]; then   make -j$(nproc) || make -j1 V=s ; else make -j1 V=s ; fi
+        if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 ; fi
+        echo "::set-output name=status::success"
+        
+    - name: Compile the firmware
+      if: ${{ failure() }}
+      id: compile2
+      run: |
+        cd openwrt
+        make -j1 V=s 
         echo "::set-output name=status::success"
          
     - name : 上传附件 整包
