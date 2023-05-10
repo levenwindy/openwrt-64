@@ -23,7 +23,7 @@ env:
   # 6.1均失败
   PLATFORM: mediatek
   # 多核
-  NPROC: true
+  NPROC: 0
 jobs:
   build:
     #runs-on: ubuntu-latest
@@ -105,12 +105,13 @@ jobs:
         find dl -size -1024c -exec rm -f {} \;
         
     - name: Compile the firmware
-        # if [ $NPROC -eq true ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
+        # if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
+        # make -j$(nproc) || make -j1 
       id: compile
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
-        make -j$(nproc) || make -j1 
+        if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
         echo "::set-output name=status::success"
          
     - name : 上传附件 整包
