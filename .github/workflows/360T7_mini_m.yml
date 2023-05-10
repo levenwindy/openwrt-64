@@ -111,13 +111,6 @@ jobs:
         echo -e "$(nproc) thread compile"
         if [ $NPROC -eq "true" ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
         echo "::set-output name=status::success"
-        
-    - name: False Compile 
-      if: steps.tag.compile.status !== 'success'
-      #if: ${{ failure() }}
-      run: |
-        cd openwrt
-        make -j1 V=s
          
     - name : 上传附件 整包
       uses: actions/upload-artifact@master
