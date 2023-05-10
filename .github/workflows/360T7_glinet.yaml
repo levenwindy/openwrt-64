@@ -21,7 +21,7 @@ env:
   GL_PKG_CONFIG: gl_pkg_config_mt3000.mk
   GLINET_DEPENDS: glinet_depends_mt3000.yml
   TARGET: target_mt7981_360t7-108M
-  NPROC: $(nproc)
+  NPROC: true
   DIY_P1_SH: diy-360T7_glinet.sh
   DIY_P2_SH: diy-immortalwrt.sh
   # NPROC 线程数 $(nproc)
@@ -130,12 +130,13 @@ jobs:
         make -j$(nproc)  GL_PKGDIR=`pwd`/glinet4.x/$MODEL/
         echo "::set-output name=status::success"
 
-    - name:  failure  make -j1
-      if: steps.tag.outputs.status == 'success' && cancelled()
+    - name: 1.2 编译 
+      if: steps.tag.outputs.status == 'success'NPROC
       run: |
-        df -h
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         cd gl-infra-builder/$MODEL
-        make -j1  GL_PKGDIR=`pwd`/glinet4.x/$MODEL/  
+        
+        if [ $NPROC -eq "true" ]; then   make -j$(nproc)  GL_PKGDIR=`pwd`/glinet4.x/$MODEL/ ; else    make -j1  GL_PKGDIR=`pwd`/glinet4.x/$MODEL/ ; fi
         echo "::set-output name=status::success"
         
 
