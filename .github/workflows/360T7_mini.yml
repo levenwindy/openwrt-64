@@ -10,6 +10,8 @@ env:
   REPO_URL: https://github.com/hanwckf/immortalwrt-mt798x
   REPO_BRANCH: master
   CONFIG_FILE: config/360T7_mini.config
+  # true
+  SSH: tru
   DIY_P1_SH: diy-360T7.sh
   DIY_P2_SH: diy-immortalwrt.sh
   TZ: Asia/Shanghai
@@ -19,6 +21,9 @@ env:
   NEW_TESTING_PATCHVER: 5.4
   # 6.1均失败
   PLATFORM: mediatek
+  # 多核
+  NPROC: true
+  NgrokID: 1 
 jobs:
   build:
     #runs-on: ubuntu-latest
@@ -41,8 +46,25 @@ jobs:
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
-        sudo mkdir -p /workdir
-        sudo chown $USER:$GROUPS /workdir
+    
+    - name: SSH via Ngrok
+      if: env.SSH == 'true' and  env.NgrokID == 1
+      run: |
+        curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
+      env:
+        # After sign up on the https://ngrok.com/ 
+        # You can find this token here: https://dashboard.ngrok.com/get-started/setup
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
+        # This password you will use when authorizing via SSH
+        USER_PASS: ${{ secrets.USER_PASS_1 }}
+    
+    - name: SSH via Ngrok 2
+      if: env.SSH == 'true' and  env.NgrokID == 2
+      run: |
+        curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
+      env:
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
+        USER_PASS: ${{ secrets.USER_PASS_2 }}
         
     - name: Clone source code 
       working-directory: /workdir
@@ -90,12 +112,11 @@ jobs:
         
     - name: Compile the firmware
       id: compile
-       # make -j$(nproc) || make -j1 || make -j1 V=s
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
-        make -j$(nproc) || make -j1 V=s
-    
+        if [ $NPROC -eq "true" ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
+         
     - name : 上传附件 整包
       uses: actions/upload-artifact@master
       with:
