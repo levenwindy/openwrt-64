@@ -25,3 +25,9 @@ sed -i 's/UTC/CST-8/g'  package/base-files/files/bin/config_generate
 
 # 修改主机名 OP
 sed -i 's/ImmortalWrt/OpenWrt/g'  package/base-files/files/bin/config_generate
+
+# 时区
+sed -i 's/time1.apple.comt/ntp.aliyun.com/g'  package/base-files/files/bin/config_generate
+sed -i 's/time1.google.comt/time1.cloud.tencent.com/g'  package/base-files/files/bin/config_generate
+sed -i 's/time.cloudflare.comt/cn.ntp.org.cn/g'  package/base-files/files/bin/config_generate
+sed -i 's/pool.ntp.orgt/cn.pool.ntp.org/g'  package/base-files/files/bin/config_generate
