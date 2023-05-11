@@ -4,14 +4,15 @@ on:
   push:
     # branches: [ master ]
     paths:
-      - 'config/360T7_mini.config'
+      - 'config/360T7_mini_m.config'
 
 env:
   REPO_URL: https://github.com/hanwckf/immortalwrt-mt798x
   REPO_BRANCH: master
   CONFIG_FILE: config/360T7_mini.config
-  # true
+  # true 不能用于make
   SSH: tru
+  NgrokID: 1 
   DIY_P1_SH: diy-360T7.sh
   DIY_P2_SH: diy-immortalwrt.sh
   TZ: Asia/Shanghai
@@ -22,8 +23,7 @@ env:
   # 6.1均失败
   PLATFORM: mediatek
   # 多核
-  NPROC: true
-  NgrokID: 1 
+  NPROC: 0
 jobs:
   build:
     #runs-on: ubuntu-latest
@@ -33,6 +33,17 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@main
+    
+    - name: SSH via Ngrok
+      if: env.SSH == 'true'
+      run: |
+        curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
+      env:
+        # After sign up on the https://ngrok.com/ 
+        # You can find this token here: https://dashboard.ngrok.com/get-started/setup
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
+        # This password you will use when authorizing via SSH
+        USER_PASS: ${{ secrets.USER_PASS_1 }}
         
     - name: Initialization environment
       env:
@@ -48,25 +59,6 @@ jobs:
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
-    
-    - name: SSH via Ngrok
-      if: env.SSH == 'true' and  env.NgrokID == 1
-      run: |
-        curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
-      env:
-        # After sign up on the https://ngrok.com/ 
-        # You can find this token here: https://dashboard.ngrok.com/get-started/setup
-        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
-        # This password you will use when authorizing via SSH
-        USER_PASS: ${{ secrets.USER_PASS_1 }}
-    
-    - name: SSH via Ngrok 2
-      if: env.SSH == 'true' and  env.NgrokID == 2
-      run: |
-        curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
-      env:
-        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
-        USER_PASS: ${{ secrets.USER_PASS_2 }}
         
     - name: Clone source code 
       working-directory: /workdir
@@ -113,11 +105,22 @@ jobs:
         find dl -size -1024c -exec rm -f {} \;
         
     - name: Compile the firmware
+        # if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
+        # make -j$(nproc) || make -j1 
       id: compile
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
-        if [ $NPROC -eq "true" ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
+        if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 ; fi
+        echo "::set-output name=status::success"
+        
+    - name: Compile the firmware
+      if: ${{ failure() }}
+      id: compile2
+      run: |
+        cd openwrt
+        make -j1 V=s 
+        echo "::set-output name=status::success"
          
     - name : 上传附件 整包
       uses: actions/upload-artifact@master
@@ -146,10 +149,17 @@ jobs:
         path: openwrt/bin/targets/*/*/*squashfs-factory.bin
         if-no-files-found: error
         
-    - name : 附件 360T7_minisquashfs-sysupgrade
+    - name : 附件 360T7_mini-squashfs-sysupgrade
       uses: actions/upload-artifact@master
       with:
-        name: 360T7_mini-108M-squashfs-sysupgrade
+        name: 360T7_mini_m-108M-squashfs-sysupgrade
         path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
+        if-no-files-found: error
+        
+    - name : 附件 360T7_mini_bin
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_mini_bin
+        path: openwrt/bin
         if-no-files-found: error
       
