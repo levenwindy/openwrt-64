@@ -152,7 +152,7 @@ jobs:
     - name : 附件 360T7_mini-squashfs-sysupgrade
       uses: actions/upload-artifact@master
       with:
-        name: 360T7_mini_m-108M-squashfs-sysupgrade
+        name: 360T7_mini-108M-squashfs-sysupgrade
         path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
         if-no-files-found: error
         
