@@ -53,7 +53,5 @@ else:
             print('没有相关依赖')
         line = f.readline()
     f.close()
-    res = re.findall(f"{result}=m", content)[0]
-    print(res)
 with open('2.config','w') as f: # 'a'表示append,即在原来文件内容后继续写数据（不清楚原有数据）
     f.write(content)
