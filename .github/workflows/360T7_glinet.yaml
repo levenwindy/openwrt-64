@@ -122,8 +122,16 @@ jobs:
         df -h
         cd gl-infra-builder/$MODEL
         cat .config
+        
+    - name: 替换 .config
+      run: |
+        cp  bash/pyconfig.py gl-infra-builder/$MODEL/
+        cd gl-infra-builder/$MODEL
+        pyconfig.py 360glinet.config 360glinet_ban.config
+        mv 2.config .config
+        cat .config
 
-    - name: 1.2 编译 
+    - name: 编译 
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         cd gl-infra-builder/$MODEL
@@ -140,8 +148,13 @@ jobs:
 
     - name:  SLEEP
       if: ${{ failure() }}
+      env:
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
+        USER_PASS: ${{ secrets.USER_PASS_2 }}
       run: |
+        curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
         sleep 3h
+    
 
     - name : 附件 360T7_glinet
       uses: actions/upload-artifact@master
