@@ -125,9 +125,9 @@ jobs:
         
     - name: 替换 .config
       run: |
-        cp      bash/pyconfig.py    gl-infra-builder/$MODEL/
-        cp      360glinet.config    gl-infra-builder/$MODEL/
-        cp  360glinet_ban.config    gl-infra-builder/$MODEL/
+        cp           bash/pyconfig.py       gl-infra-builder/$MODEL/
+        cp      depend/360glinet.config     gl-infra-builder/$MODEL/
+        cp  depend/360glinet_ban.config    gl-infra-builder/$MODEL/
         cd gl-infra-builder/$MODEL
         python3 pyconfig.py 360glinet.config 360glinet_ban.config
         mv 2.config .config
@@ -151,8 +151,8 @@ jobs:
     - name:  SLEEP
       if: ${{ failure() }}
       env:
-        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
-        USER_PASS: ${{ secrets.USER_PASS_1 }}
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_2 }}
+        USER_PASS: ${{ secrets.USER_PASS_2 }}
       run: |
         curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
         sleep 3h
