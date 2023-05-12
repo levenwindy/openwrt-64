@@ -125,9 +125,11 @@ jobs:
         
     - name: 替换 .config
       run: |
-        cp  bash/pyconfig.py gl-infra-builder/$MODEL/
+        cp      bash/pyconfig.py    gl-infra-builder/$MODEL/
+        cp      360glinet.config    gl-infra-builder/$MODEL/
+        cp  360glinet_ban.config    gl-infra-builder/$MODEL/
         cd gl-infra-builder/$MODEL
-        pyconfig.py 360glinet.config 360glinet_ban.config
+        python3 pyconfig.py 360glinet.config 360glinet_ban.config
         mv 2.config .config
         cat .config
 
