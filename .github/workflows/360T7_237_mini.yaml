@@ -1,0 +1,165 @@
+name: 360T7_237_mini
+
+on:
+  push:
+    # branches: [ master ]
+    paths:
+      - 'config/360T7_mini.config'
+
+env:
+  REPO_URL: https://github.com/padavanonly/immortalwrtARM
+  REPO_BRANCH: mt7981
+  CONFIG_FILE: config/360T7_237_mini.config
+  # true 不能用于make
+  SSH: tru
+  NgrokID: 1 
+  DIY_P1_SH: diy-360T7.sh
+  DIY_P2_SH: diy-immortalwrt.sh
+  TZ: Asia/Shanghai
+  NAME: 360T7_237_mini
+  ORGIN: 5.4
+  NEW_PATCHVER: 5.4
+  NEW_TESTING_PATCHVER: 5.4
+  # 6.1均失败
+  PLATFORM: mediatek
+  # 多核
+  NPROC: 0
+jobs:
+  build:
+    #runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+    # runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+    
+    - name: SSH via Ngrok
+      if: env.SSH == 'true'
+      run: |
+        curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
+      env:
+        # After sign up on the https://ngrok.com/ 
+        # You can find this token here: https://dashboard.ngrok.com/get-started/setup
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
+        # This password you will use when authorizing via SSH
+        USER_PASS: ${{ secrets.USER_PASS_1 }}
+        
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+        # sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
+      run: |
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+        sudo -E apt-get -qq update
+        sudo -E apt-get -qq install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib \
+              gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget qemu-utils
+        sudo -E apt-get -qq autoremove --purge
+        sudo -E apt-get -qq clean
+        sudo timedatectl set-timezone "$TZ"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+        
+    - name: Clone source code 
+      working-directory: /workdir
+      run: |
+        df -hT $PWD
+        git clone -b REPO_BRANCH $REPO_URL openwrt
+        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        
+    - name: Load custom feeds
+      run: |
+        chmod +x bash/$DIY_P1_SH
+        cd openwrt
+        $GITHUB_WORKSPACE/bash/$DIY_P1_SH
+        
+    - name: 内核1
+      run: |
+        cd openwrt
+        sed -i "s/KERNEL_PATCHVER:=$ORGIN/KERNEL_PATCHVER:=$NEW_PATCHVER/g" ./target/linux/$PLATFORM/Makefile
+        sed -i "s/KERNEL_TESTING_PATCHVER:=$ORGIN/KERNEL_TESTING_PATCHVER:=$NEW_TESTING_PATCHVER/g" ./target/linux/$PLATFORM/Makefile
+        cat  ./target/linux/$PLATFORM/Makefile
+        
+    - name: Update feeds
+      run: cd openwrt && ./scripts/feeds update -a
+
+    - name: Install feeds
+      run: cd openwrt && ./scripts/feeds install -a
+
+    - name: Load custom configuration
+      run: |
+        [ -e files ] && mv files openwrt/files
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        chmod +x $DIY_P2_SH
+        cd openwrt
+        $GITHUB_WORKSPACE/$DIY_P2_SH
+        
+    - name: Download package
+      id: package
+        # make download
+      run: |
+        cd openwrt
+        make defconfig
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+        
+    - name: Compile the firmware
+        # if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
+        # make -j$(nproc) || make -j1 
+      id: compile
+      run: |
+        cd openwrt
+        echo -e "$(nproc) thread compile"
+        if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 ; fi
+        echo "::set-output name=status::success"
+        
+    - name: Compile the firmware
+      if: ${{ failure() }}
+      id: compile2
+      run: |
+        cd openwrt
+        make -j1 V=s 
+        echo "::set-output name=status::success"
+         
+    - name : 上传附件 targets
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_237_mini_targets
+        path: openwrt/bin/targets/
+        
+    - name : 附件 bin
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_237_mini_bin
+        path: openwrt/bin
+        if-no-files-found: error
+        
+    - name : packages
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_237_mini_packages
+        path: openwrt/bin/targets/*/*/packages
+        if-no-files-found: error
+        
+    - name : initramfs-kernel.bin
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_237_mini-initramfs-kernel
+        path: openwrt/bin/targets/*/*/*initramfs-kernel.bin
+        if-no-files-found: error
+        
+    - name : squashfs-factory.bin
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_237_mini-108M-squashfs-factory
+        path: openwrt/bin/targets/*/*/*squashfs-factory.bin
+        if-no-files-found: error
+        
+    - name : 360T7_237_mini-squashfs-sysupgrade
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_237_mini-108M-squashfs-sysupgrade
+        path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
+        if-no-files-found: error
+      
