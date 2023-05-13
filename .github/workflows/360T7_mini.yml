@@ -1,5 +1,5 @@
 name: 360T7_mini
-
+ 
 on:
   push:
     # branches: [ master ]
@@ -9,6 +9,8 @@ on:
 env:
   REPO_URL: https://github.com/hanwckf/immortalwrt-mt798x
   REPO_BRANCH: master
+  # master 版本
+  CHECKOUT: ae4a8f858e8970fc240f676d6318f09e732e2b6d
   CONFIG_FILE: config/360T7_mini.config
   # true 不能用于make
   SSH: tru
@@ -24,10 +26,12 @@ env:
   PLATFORM: mediatek
   # 多核
   NPROC: 0
+  # 下载线程数 DOWNLOAD
+  DOWNLOAD: 8
 jobs:
   build:
     #runs-on: ubuntu-latest
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     # runs-on: ubuntu-20.04
 
     steps:
@@ -64,8 +68,14 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        git clone $REPO_URL openwrt
+        git clone -b $REPO_BRANCH $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        
+    - name: Git chechkout
+      working-directory: /workdir
+      run: |
+        cd openwrt
+        git checkout $CHECKOUT
         
     - name: Load custom feeds
       run: |
@@ -100,66 +110,145 @@ jobs:
       run: |
         cd openwrt
         make defconfig
-        make download -j8
+        make download -j$DOWNLOAD
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
         
-    - name: Compile the firmware
+    - name: Compile1 the firmware
         # if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
         # make -j$(nproc) || make -j1 
-      id: compile
+      id: compile1
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
         if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 ; fi
         echo "::set-output name=status::success"
         
-    - name: Compile the firmware
+    - name: failure Compile1 the firmware
       if: ${{ failure() }}
-      id: compile2
+      id: failure_compile1
       run: |
         cd openwrt
         make -j1 V=s 
         echo "::set-output name=status::success"
          
-    - name : 上传附件 整包
+    - name : 上传附件 targets
       uses: actions/upload-artifact@master
       with:
-        name: 360T7_mini
+        name: 360T7_mini-108M_targets
         path: openwrt/bin/targets/
         
-    - name : 附件 packages
+    - name : packages
       uses: actions/upload-artifact@master
       with:
-        name: 360T7_mini_packages
+        name: 360T7_mini-108M_packages
         path: openwrt/bin/targets/*/*/packages
         if-no-files-found: error
         
-    - name : 附件 initramfs-kernel.bin
+    - name : initramfs-kernel.bin
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini-108M-initramfs-kernel
         path: openwrt/bin/targets/*/*/*initramfs-kernel.bin
         if-no-files-found: error
         
-    - name : 附件 squashfs-factory.bin
+    - name : squashfs-factory.bin
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini-108M-squashfs-factory
         path: openwrt/bin/targets/*/*/*squashfs-factory.bin
         if-no-files-found: error
         
-    - name : 附件 360T7_mini-squashfs-sysupgrade
+    - name : 360T7_mini-108M-squashfs-sysupgrade
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini-108M-squashfs-sysupgrade
         path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
         if-no-files-found: error
         
-    - name : 附件 360T7_mini_bin
+    - name : packages2
       uses: actions/upload-artifact@master
       with:
-        name: 360T7_mini_bin
-        path: openwrt/bin
+        name: 360T7_mini-108M_packages2
+        path: openwrt/bin/packages
         if-no-files-found: error
+
+    - name: test 360T7.config
+      run: |
+        cd openwrt
+        sed -i 's/# CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7 is not set/CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7=y/g' .config
+        sed -i 's/CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7-108M=y/# CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7-108M is not set/g' .config
+        sed -i 's/CONFIG_TARGET_PROFILE="DEVICE_mt7981-360-t7-108M"/CONFIG_TARGET_PROFILE="DEVICE_mt7981-360-t7"/g' .config
+        cat .config
+        
+    - name: Download package2
+      id: package2
+        # make download
+      run: |
+        cd openwrt
+        rm -rf bin
+        make defconfig
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+        
+    - name: Compile the firmware2
+        # if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
+        # make -j$(nproc) || make -j1 
+      id: compile2
+      run: |
+        cd openwrt
+        echo -e "$(nproc) thread compile"
+        if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 ; fi
+        echo "::set-output name=status::success"
+        
+    - name: failure Compile the firmware2
+      if: ${{ failure() }}
+      id: failure_compile2
+      run: |
+        cd openwrt
+        make -j1 V=s 
+        echo "::set-output name=status::success"
+         
+    - name : 上传附件 360T7_mini_targets
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_mini_targets
+        path: openwrt/bin/targets/
+        
+    - name : 360T7_mini_packages
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_mini_packages
+        path: openwrt/bin/targets/*/*/packages
+        if-no-files-found: error
+        
+    - name : 360T7_237_initramfs-kernel.bin
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_mini-initramfs-kernel
+        path: openwrt/bin/targets/*/*/*initramfs-kernel.bin
+        if-no-files-found: error
+        
+    - name : squashfs-factory.bin
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_mini-squashfs-factory
+        path: openwrt/bin/targets/*/*/*squashfs-factory.bin
+        if-no-files-found: error
+        
+    - name : 360T7_mini-squashfs-sysupgrade
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_mini-squashfs-sysupgrade
+        path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
+        if-no-files-found: error
+        
+    - name : packages2
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_mini_packages2
+        path: openwrt/bin/packages
+        if-no-files-found: error
+
       
