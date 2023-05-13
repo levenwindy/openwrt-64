@@ -10,7 +10,7 @@ env:
   REPO_URL: https://github.com/hanwckf/immortalwrt-mt798x
   REPO_BRANCH: openwrt-21.02
   # master 版本
-  CHECKOUT: 7d7e55705c52d47d1a5fff8ca4d18bb57c24a370
+  CHECKOUT: 46bc7023941c1663dbb1ca9dc4031344d5c597db
   CONFIG_FILE: config/360T7_mini.config
   # true 不能用于make
   SSH: tru
