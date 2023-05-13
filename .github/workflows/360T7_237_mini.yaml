@@ -93,14 +93,6 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
-
-    - name: test 360T7.config
-      run: |
-        cd openwrt
-        sed -i 's/# CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7 is not set/CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7=y/g' 360T7_237_mini.config
-        sed -i 's/CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7-108M=y/# CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7-108M is not set/g' 360T7_237_mini.config
-        sed -i 's/CONFIG_TARGET_PROFILE="DEVICE_mt7981-360-t7-108M"/CONFIG_TARGET_PROFILE="DEVICE_mt7981-360-t7"/g' 360T7_237_mini.config
-        cat .config
         
     - name: Download package
       id: package
@@ -133,27 +125,27 @@ jobs:
     - name : 上传附件 targets
       uses: actions/upload-artifact@master
       with:
-        name: 360T7_237_mini_targets
+        name: 360T7_237_mini-108M_targets
         path: openwrt/bin/targets/
         
     - name : 附件 bin
       uses: actions/upload-artifact@master
       with:
-        name: 360T7_237_mini_bin
+        name: 360T7_237_mini-108M_bin
         path: openwrt/bin
         if-no-files-found: error
         
     - name : packages
       uses: actions/upload-artifact@master
       with:
-        name: 360T7_237_mini_packages
+        name: 360T7_237_mini-108M_packages
         path: openwrt/bin/targets/*/*/packages
         if-no-files-found: error
         
     - name : initramfs-kernel.bin
       uses: actions/upload-artifact@master
       with:
-        name: 360T7_237_mini-initramfs-kernel
+        name: 360T7_237_mini-108M-initramfs-kernel
         path: openwrt/bin/targets/*/*/*initramfs-kernel.bin
         if-no-files-found: error
         
@@ -164,10 +156,89 @@ jobs:
         path: openwrt/bin/targets/*/*/*squashfs-factory.bin
         if-no-files-found: error
         
-    - name : 360T7_237_mini-squashfs-sysupgrade
+    - name : 360T7_237_mini-108M-squashfs-sysupgrade
       uses: actions/upload-artifact@master
       with:
         name: 360T7_237_mini-108M-squashfs-sysupgrade
         path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
         if-no-files-found: error
+
+    - name: test 360T7.config
+      run: |
+        cd openwrt
+        sed -i 's/# CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7 is not set/CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7=y/g' 360T7_237_mini.config
+        sed -i 's/CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7-108M=y/# CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7-108M is not set/g' 360T7_237_mini.config
+        sed -i 's/CONFIG_TARGET_PROFILE="DEVICE_mt7981-360-t7-108M"/CONFIG_TARGET_PROFILE="DEVICE_mt7981-360-t7"/g' 360T7_237_mini.config
+        cat .config
+        
+    - name: Download package2
+      id: package2
+        # make download
+      run: |
+        cd openwrt
+        rm -rf bin
+        make defconfig
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+        
+    - name: Compile the firmware2
+        # if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
+        # make -j$(nproc) || make -j1 
+      id: compile3
+      run: |
+        cd openwrt
+        echo -e "$(nproc) thread compile"
+        if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 ; fi
+        echo "::set-output name=status::success"
+        
+    - name: Compile the firmware2
+      if: ${{ failure() }}
+      id: compile4
+      run: |
+        cd openwrt
+        make -j1 V=s 
+        echo "::set-output name=status::success"
+         
+    - name : 上传附件 360T7_237_targets
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_237_mini_targets
+        path: openwrt/bin/targets/
+        
+    - name : 附件 360T7_237_bin
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_237_mini_bin
+        path: openwrt/bin
+        if-no-files-found: error
+        
+    - name : 360T7_237_packages
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_237_mini_packages
+        path: openwrt/bin/targets/*/*/packages
+        if-no-files-found: error
+        
+    - name : 360T7_237_initramfs-kernel.bin
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_237_mini-initramfs-kernel
+        path: openwrt/bin/targets/*/*/*initramfs-kernel.bin
+        if-no-files-found: error
+        
+    - name : squashfs-factory.bin
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_237_mini-squashfs-factory
+        path: openwrt/bin/targets/*/*/*squashfs-factory.bin
+        if-no-files-found: error
+        
+    - name : 360T7_237_mini-squashfs-sysupgrade
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_237_mini-squashfs-sysupgrade
+        path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
+        if-no-files-found: error
+
       
