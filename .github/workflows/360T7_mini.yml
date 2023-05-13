@@ -1,5 +1,5 @@
 name: 360T7_mini
- 
+  
 on:
   push:
     # branches: [ master ]
