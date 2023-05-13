@@ -24,6 +24,8 @@ env:
   PLATFORM: mediatek
   # 多核
   NPROC: 0
+  # 下载线程数 DOWNLOAD
+  DOWNLOAD: 2
 jobs:
   build:
     #runs-on: ubuntu-latest
@@ -100,7 +102,7 @@ jobs:
       run: |
         cd openwrt
         make defconfig
-        make download -j4
+        make download -j$DOWNLOAD
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
         
