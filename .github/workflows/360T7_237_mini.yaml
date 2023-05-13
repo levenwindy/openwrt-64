@@ -112,7 +112,7 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
         
-    - name: Compile the firmware
+    - name: Compile1 the firmware
         # if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
         # make -j$(nproc) || make -j1 
       id: compile1
@@ -122,7 +122,7 @@ jobs:
         if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 ; fi
         echo "::set-output name=status::success"
         
-    - name: failure Compile the firmware
+    - name: failure Compile1 the firmware
       if: ${{ failure() }}
       id: failure_compile1
       run: |
