@@ -136,13 +136,6 @@ jobs:
         name: 360T7_237_mini-108M_targets
         path: openwrt/bin/targets/
         
-    - name : 附件 bin
-      uses: actions/upload-artifact@master
-      with:
-        name: 360T7_237_mini-108M_bin
-        path: openwrt/bin
-        if-no-files-found: error
-        
     - name : packages
       uses: actions/upload-artifact@master
       with:
@@ -169,6 +162,13 @@ jobs:
       with:
         name: 360T7_237_mini-108M-squashfs-sysupgrade
         path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
+        if-no-files-found: error
+        
+    - name : packages2
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_237_mini-108M_packages2
+        path: openwrt/bin/packages
         if-no-files-found: error
 
     - name: test 360T7.config
@@ -214,13 +214,6 @@ jobs:
         name: 360T7_237_mini_targets
         path: openwrt/bin/targets/
         
-    - name : 附件 360T7_237_bin
-      uses: actions/upload-artifact@master
-      with:
-        name: 360T7_237_mini_bin
-        path: openwrt/bin
-        if-no-files-found: error
-        
     - name : 360T7_237_packages
       uses: actions/upload-artifact@master
       with:
@@ -247,6 +240,13 @@ jobs:
       with:
         name: 360T7_237_mini-squashfs-sysupgrade
         path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
+        if-no-files-found: error
+        
+    - name : packages2
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_237_mini_packages2
+        path: openwrt/bin/packages
         if-no-files-found: error
 
       
