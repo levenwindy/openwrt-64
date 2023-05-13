@@ -4,7 +4,7 @@ on:
   push:
     # branches: [ master ]
     paths:
-      - 'config/360T7_mini.config'
+      - 'config/360T7_237_mini.config'
 
 env:
   REPO_URL: https://github.com/padavanonly/immortalwrtARM
