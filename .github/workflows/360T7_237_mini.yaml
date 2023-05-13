@@ -115,16 +115,16 @@ jobs:
     - name: Compile the firmware
         # if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
         # make -j$(nproc) || make -j1 
-      id: compile
+      id: compile1
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
         if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 ; fi
         echo "::set-output name=status::success"
         
-    - name: Compile the firmware
+    - name: failure Compile the firmware
       if: ${{ failure() }}
-      id: compile2
+      id: failure_compile1
       run: |
         cd openwrt
         make -j1 V=s 
@@ -193,16 +193,16 @@ jobs:
     - name: Compile the firmware2
         # if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
         # make -j$(nproc) || make -j1 
-      id: compile3
+      id: compile2
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
         if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 ; fi
         echo "::set-output name=status::success"
         
-    - name: Compile the firmware2
+    - name: failure Compile the firmware2
       if: ${{ failure() }}
-      id: compile4
+      id: failure_compile2
       run: |
         cd openwrt
         make -j1 V=s 
