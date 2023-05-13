@@ -93,14 +93,6 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
-
-    - name: test 360T7.config2
-      run: |
-        cd openwrt
-        sed -i 's/# CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7 is not set/CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7=y/g' .config
-        sed -i 's/CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7-108M=y/# CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7-108M is not set/g' .config
-        sed -i 's/CONFIG_TARGET_PROFILE="DEVICE_mt7981-360-t7-108M"/CONFIG_TARGET_PROFILE="DEVICE_mt7981-360-t7"/g' .config
-        cat .config
         
     - name: Download package
       id: package
