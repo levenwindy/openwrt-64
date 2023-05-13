@@ -25,7 +25,7 @@ env:
   # 多核
   NPROC: 0
   # 下载线程数 DOWNLOAD
-  DOWNLOAD: 2
+  DOWNLOAD: 3
 jobs:
   build:
     #runs-on: ubuntu-latest
