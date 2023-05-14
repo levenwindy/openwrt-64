@@ -67,7 +67,6 @@ jobs:
         sudo chown $USER:$GROUPS /workdir
         
     - name: Clone source code 
-      if: env.BUILD2 == ture
       working-directory: /workdir
       run: |
         df -hT $PWD
@@ -178,7 +177,7 @@ jobs:
         if-no-files-found: error
 
     - name: test 360T7.config
-      if: env.BUILD2 == ture
+      if: env.BUILD2 == 'true'
       run: |
         cd openwrt
         sed -i 's/# CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7 is not set/CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7=y/g' .config
@@ -187,7 +186,7 @@ jobs:
         cat .config
         
     - name: Download package2
-      if: env.BUILD2 == ture
+      if: env.BUILD2 == 'true'
       id: package2
         # make download
       run: |
@@ -199,7 +198,7 @@ jobs:
         find dl -size -1024c -exec rm -f {} \;
         
     - name: Compile the firmware2
-      if: env.BUILD2 == ture
+      if: env.BUILD2 == 'true'
         # if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
         # make -j$(nproc) || make -j1 
       id: compile2
@@ -218,14 +217,14 @@ jobs:
         echo "::set-output name=status::success"
          
     - name : 上传附件 360T7_mini_targets
-      if: env.BUILD2 == ture
+      if: env.BUILD2 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini_targets
         path: openwrt/bin/targets/
         
     - name : 360T7_mini_packages
-      if: env.BUILD2 == ture
+      if: env.BUILD2 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini_packages
@@ -233,7 +232,7 @@ jobs:
         if-no-files-found: error
         
     - name : 360T7_237_initramfs-kernel.bin
-      if: env.BUILD2 == ture
+      if: env.BUILD2 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini-initramfs-kernel
@@ -241,7 +240,7 @@ jobs:
         if-no-files-found: error
         
     - name : squashfs-factory.bin
-      if: env.BUILD2 == ture
+      if: env.BUILD2 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini-squashfs-factory
@@ -249,7 +248,7 @@ jobs:
         if-no-files-found: error
         
     - name : 360T7_mini-squashfs-sysupgrade
-      if: env.BUILD2 == ture
+      if: env.BUILD2 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini-squashfs-sysupgrade
@@ -257,7 +256,7 @@ jobs:
         if-no-files-found: error
         
     - name : packages2
-      if: env.BUILD2 == ture
+      if: env.BUILD2 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini_packages2
