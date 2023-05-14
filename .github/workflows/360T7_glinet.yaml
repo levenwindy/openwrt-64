@@ -117,6 +117,13 @@ jobs:
             cp ./glinet4.x/pkg_config/$GLINET_DEPENDS  ./profiles/glinet_depends.yml && \
             ./scripts/gen_config.py  glinet_depends
 
+    - name: 修改 .config  gen_config.py  glinet_depends之后
+      run: |
+        df -h
+        cd gl-infra-builder/$MODEL
+        sed -i 's/CONFIG_PACKAGE_luci-app-mtkwifi=y/CONFIG_PACKAGE_luci-app-mtkwifi=m/g' .config
+        cat .config
+
     - name: 查看 .config 
       run: |
         df -h
