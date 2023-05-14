@@ -9,8 +9,8 @@ on:
 env:
   REPO_URL: https://github.com/hanwckf/immortalwrt-mt798x
   REPO_BRANCH: openwrt-21.02
-  # master 版本
-  CHECKOUT: f67f60b809b433c42bc86dad60fbdef0fb866a0a
+  # 选则历史版本 checkout
+  # CHECKOUT: f67f60b809b433c42bc86dad60fbdef0fb866a0a
   CONFIG_FILE: config/360T7_mini.config
   # true 不能用于make
   SSH: tru
@@ -75,7 +75,8 @@ jobs:
       working-directory: /workdir
       run: |
         cd openwrt
-        git checkout $CHECKOUT
+        if [ $CHECKOUT != "" ]; then  git checkout $CHECKOUT ; else echo "不改变版本" ; fi
+        
         
     - name: Load custom feeds
       run: |
