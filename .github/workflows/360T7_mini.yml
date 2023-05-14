@@ -20,6 +20,7 @@ env:
   TZ: Asia/Shanghai
   NAME: 360T7_mini
   ORGIN: 5.4
+  # 替换内核 如 NEW_PATCHVER: 5.15 
   NEW_PATCHVER: 5.4
   NEW_TESTING_PATCHVER: 5.4
   # 6.1均失败
@@ -29,7 +30,7 @@ env:
   # 下载线程数 DOWNLOAD
   DOWNLOAD: 8
   # 构建非 108M 固件 true
-  BUILD2: true
+  BUILD2: tru
 jobs:
   build:
     #runs-on: ubuntu-latest
@@ -52,7 +53,6 @@ jobs:
         USER_PASS: ${{ secrets.USER_PASS_1 }}
         
     - name: Initialization environment
-      if: env.BUILD2 == 'true'
       env:
         DEBIAN_FRONTEND: noninteractive
         # sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
