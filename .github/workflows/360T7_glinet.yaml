@@ -21,10 +21,12 @@ env:
   GL_PKG_CONFIG: gl_pkg_config_mt3000.mk
   GLINET_DEPENDS: glinet_depends_mt3000.yml
   TARGET: target_mt7981_360t7-108M
+  # NPROC 线程数 $(nproc)
   NPROC: true
   DIY_P1_SH: diy-360T7_glinet.sh
   DIY_P2_SH: diy-immortalwrt.sh
-  # NPROC 线程数 $(nproc)
+  # python修改 true
+  PYTHON3: tru
   
 jobs:
   build:
@@ -131,6 +133,7 @@ jobs:
         cat .config
         
     - name: 替换 .config
+      if: env.PYTHON3 == 'true' 
       run: |
         cp           bash/pyconfig.py       gl-infra-builder/$MODEL/
         cp      depend/360glinet.config     gl-infra-builder/$MODEL/
