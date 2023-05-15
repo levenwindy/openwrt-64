@@ -31,6 +31,7 @@ env:
   DOWNLOAD: 8
   # 构建非 108M 固件 true
   BUILD2: tru
+  MTKHQOS: tru
 jobs:
   build:
     #runs-on: ubuntu-latest
@@ -94,6 +95,13 @@ jobs:
         sed -i "s/KERNEL_TESTING_PATCHVER:=$ORGIN/KERNEL_TESTING_PATCHVER:=$NEW_TESTING_PATCHVER/g" ./target/linux/$PLATFORM/Makefile
         cat  ./target/linux/$PLATFORM/Makefile
         
+    # hanwckf的源码开启硬件QOS
+    - name: 237硬件QOS
+      if: env.MTKHQOS == 'true'
+      run: |
+        cd openwrt
+        target/linux/mediatek/files-5.4/drivers/net/ethernet/mediatek/mtk_hnat/hnat_nf_hook.c
+    
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
 
