@@ -25,13 +25,13 @@ env:
   NEW_TESTING_PATCHVER: 5.4
   # 6.1均失败
   PLATFORM: mediatek
-  # 多核
+  # 编译核心数 0 默认最多核新  2双核 
   NPROC: 0
   # 下载线程数 DOWNLOAD
   DOWNLOAD: 8
   # 构建非 108M 固件 true
   BUILD2: tru
-  MTKHQOS: tru
+  MTKHQOS: true
 jobs:
   build:
     #runs-on: ubuntu-latest
@@ -88,9 +88,13 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/bash/$DIY_P1_SH
         
+    # 237176253 支持硬件QOS padavanonly/immortalwrtARM
     - name: cat hnat_nf_hook.c 硬件 QoS
+      if: env.MTKHQOS == 'true'
       run: |
         cd openwrt
+        sed -i "s/entry->ipv4_hnapt.winfo.wcid = skb_hnat_wc_id(skb);/entry->ipv4_hnapt.winfo.wcid = skb_hnat_wc_id(skb);\n			entry->ipv4_hnapt.iblk2.fqos = (IS_HQOS_MODE) ? 1 : 0;/g" target/linux/mediatek/files-5.4/drivers/net/ethernet/mediatek/mtk_hnat/hnat_nf_hook.c
+        sed -i "s/entry->ipv6_5t_route.winfo.wcid = skb_hnat_wc_id(skb);/entry->ipv6_5t_route.winfo.wcid = skb_hnat_wc_id(skb);\n			entry->ipv6_5t_route.iblk2.fqos = (IS_HQOS_MODE) ? 1 : 0;/g" target/linux/mediatek/files-5.4/drivers/net/ethernet/mediatek/mtk_hnat/hnat_nf_hook.c
         cat target/linux/mediatek/files-5.4/drivers/net/ethernet/mediatek/mtk_hnat/hnat_nf_hook.c
         
     - name: 内核1
@@ -99,13 +103,6 @@ jobs:
         sed -i "s/KERNEL_PATCHVER:=$ORGIN/KERNEL_PATCHVER:=$NEW_PATCHVER/g" ./target/linux/$PLATFORM/Makefile
         sed -i "s/KERNEL_TESTING_PATCHVER:=$ORGIN/KERNEL_TESTING_PATCHVER:=$NEW_TESTING_PATCHVER/g" ./target/linux/$PLATFORM/Makefile
         cat  ./target/linux/$PLATFORM/Makefile
-        
-    # hanwckf的源码开启硬件QOS
-    - name: 237硬件QOS
-      if: env.MTKHQOS == 'true'
-      run: |
-        cd openwrt
-        target/linux/mediatek/files-5.4/drivers/net/ethernet/mediatek/mtk_hnat/hnat_nf_hook.c
     
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
@@ -138,7 +135,7 @@ jobs:
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
-        if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 ; fi
+        if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j$NPROC ; fi
         echo "::set-output name=status::success"
         
     - name: failure Compile1 the firmware
@@ -219,7 +216,7 @@ jobs:
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
-        if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 ; fi
+        if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j$NPROC ; fi
         echo "::set-output name=status::success"
         
     - name: failure Compile the firmware2
