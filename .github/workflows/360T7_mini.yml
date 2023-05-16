@@ -88,6 +88,11 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/bash/$DIY_P1_SH
         
+    - name: cat hnat_nf_hook.c 硬件 QoS
+      run: |
+        cd openwrt
+        cat target/linux/mediatek/files-5.4/drivers/net/ethernet/mediatek/mtk_hnat/hnat_nf_hook.c
+        
     - name: 内核1
       run: |
         cd openwrt
