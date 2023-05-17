@@ -29,8 +29,10 @@ env:
   NPROC: 0
   # 下载线程数 DOWNLOAD
   DOWNLOAD: 8
+  # 构建 108M 固件 true
+  BUILD1: tru
   # 构建非 108M 固件 true
-  BUILD2: tru
+  BUILD2: true
   MTKHQOS: true
 jobs:
   build:
@@ -119,6 +121,7 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_P2_SH
         
     - name: Download package
+      if: env.BUILD1 == 'true'
       id: package
         # make download
       run: |
@@ -129,6 +132,7 @@ jobs:
         find dl -size -1024c -exec rm -f {} \;
         
     - name: Compile1 the firmware
+      if: env.BUILD1 == 'true'
         # if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
         # make -j$(nproc) || make -j1 
       id: compile1
