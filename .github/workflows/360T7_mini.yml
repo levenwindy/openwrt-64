@@ -151,12 +151,14 @@ jobs:
         echo "::set-output name=status::success"
          
     - name : 上传附件 targets
+      if: env.BUILD1 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini-108M_targets
         path: openwrt/bin/targets/
         
     - name : packages
+      if: env.BUILD1 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini-108M_packages
@@ -164,6 +166,7 @@ jobs:
         if-no-files-found: error
         
     - name : initramfs-kernel.bin
+      if: env.BUILD1 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini-108M-initramfs-kernel
@@ -171,6 +174,7 @@ jobs:
         if-no-files-found: error
         
     - name : squashfs-factory.bin
+      if: env.BUILD1 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini-108M-squashfs-factory
@@ -178,6 +182,7 @@ jobs:
         if-no-files-found: error
         
     - name : 360T7_mini-108M-squashfs-sysupgrade
+      if: env.BUILD1 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini-108M-squashfs-sysupgrade
@@ -185,6 +190,7 @@ jobs:
         if-no-files-found: error
         
     - name : packages2
+      if: env.BUILD1 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_mini-108M_packages2
