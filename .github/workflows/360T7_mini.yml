@@ -30,7 +30,7 @@ env:
   # 下载线程数 DOWNLOAD
   DOWNLOAD: 8
   # 构建 108M 固件 true
-  BUILD1: tru
+  BUILD1: true
   # 构建非 108M 固件 true
   BUILD2: true
   MTKHQOS: true
