@@ -73,10 +73,10 @@ jobs:
         sudo chown $USER:$GROUPS /workdir
         
     - name: Clone source code 
-      #  if [ $REPO_BRANCH != '' ];then git clone $REPO_URL openwrt ;else git clone -b $REPO_BRANCH $REPO_URL openwrt ;fi
       working-directory: /workdir
       run: |
         df -hT $PWD
+        if [ $REPO_BRANCH == '' ]; then git clone $REPO_URL openwrt ;else git clone -b $REPO_BRANCH $REPO_URL openwrt ;fi
         git clone $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         
@@ -105,8 +105,8 @@ jobs:
     - name: 替换内核1
       run: |
         cd openwrt
-        if [ $NEW_PATCHVER != '' ];then sed -i "s/KERNEL_PATCHVER:=$ORGIN/KERNEL_PATCHVER:=$NEW_PATCHVER/g" ./target/linux/$PLATFORM/Makefile ;fi
-        if [ $NEW_TESTING_PATCHVER != '' ];then sed -i "s/KERNEL_TESTING_PATCHVER:=$ORGIN/KERNEL_TESTING_PATCHVER:=$NEW_TESTING_PATCHVER/g" ./target/linux/$PLATFORM/Makefile ;fi
+        if [ $NEW_PATCHVER != '' ]; then sed -i "s/KERNEL_PATCHVER:=$ORGIN/KERNEL_PATCHVER:=$NEW_PATCHVER/g" ./target/linux/$PLATFORM/Makefile ;fi
+        if [ $NEW_TESTING_PATCHVER != '' ]; then sed -i "s/KERNEL_TESTING_PATCHVER:=$ORGIN/KERNEL_TESTING_PATCHVER:=$NEW_TESTING_PATCHVER/g" ./target/linux/$PLATFORM/Makefile ;fi
         cat  ./target/linux/$PLATFORM/Makefile
     
     - name: Update feeds
