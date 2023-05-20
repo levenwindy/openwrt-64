@@ -75,9 +75,9 @@ jobs:
     - name: Clone source code 
       working-directory: /workdir
       run: |
+        echo "REPO_BRANCH: $REPO_BRANCH"
         df -hT $PWD
-        if [ $REPO_BRANCH == '' ]; then git clone $REPO_URL openwrt ;else git clone -b $REPO_BRANCH $REPO_URL openwrt ;fi
-        git clone $REPO_URL openwrt
+        if [ -z "$REPO_BRANCH" ]; thengit clone $REPO_URL openwrt ;else echo git clone -b $REPO_BRANCH $REPO_URL openwrt ;fi
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         
     - name: Git chechkout
