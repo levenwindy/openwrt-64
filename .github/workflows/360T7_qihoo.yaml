@@ -73,10 +73,11 @@ jobs:
         sudo chown $USER:$GROUPS /workdir
         
     - name: Clone source code 
+      #  if [ $REPO_BRANCH != '' ];then git clone $REPO_URL openwrt ;else git clone -b $REPO_BRANCH $REPO_URL openwrt ;fi
       working-directory: /workdir
       run: |
         df -hT $PWD
-        if [ $REPO_BRANCH != '' ];then git clone $REPO_URL openwrt ;else git clone -b $REPO_BRANCH $REPO_URL openwrt ;fi
+        git clone $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         
     - name: Git chechkout
