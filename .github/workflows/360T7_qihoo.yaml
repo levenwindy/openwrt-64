@@ -14,7 +14,7 @@ env:
   # CHECKOUT: f67f60b809b433c42bc86dad60fbdef0fb866a0a
   CONFIG_FILE: config/360T7_qihoo.config
   # true 不能用于make
-  SSH: true
+  SSH: tru
   NgrokID: 1 
   DIY_P1_SH: diy-360T7_qihoo.sh
   DIY_P2_SH: diy-immortalwrt.sh
@@ -85,17 +85,6 @@ jobs:
         if [ -z $REPO_BRANCH ]; then git clone $REPO_URL openwrt ; else git clone -b $REPO_BRANCH $REPO_URL openwrt ;fi
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         
-    - name: 替换成旧版upnp
-      working-directory: /workdir
-      run: |
-        sleep 1h
-        if [ -n $UPNP ]; then git clone -b $UPNP https://github.com/immortalwrt/packages $UPNP ;fi
-        cp -r $UPNP/net/miniupnpd openwrt/feeds/luci/applications/
-        rm -rf $UPNP
-        echo "------------------------------------------------------------------------" 
-        echo "feeds/luci/applications/: " 
-        ls openwrt/feeds/luci/applications/
-        
     - name: Git chechkout
       working-directory: /workdir
       run: |
@@ -130,7 +119,17 @@ jobs:
 
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
-
+      
+    - name: 替换成旧版upnp
+      working-directory: /workdir
+      run: |
+        if [ -n $UPNP ]; then git clone -b $UPNP https://github.com/immortalwrt/packages $UPNP ;fi && \
+            cp -r $UPNP/net/miniupnpd openwrt/feeds/luci/applications/ && \
+            rm -rf $UPNP && \
+            echo "------------------------------------------------------------------------"  && \
+            echo "feeds/luci/applications/: "  && \
+            ls openwrt/feeds/luci/applications/
+            
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files openwrt/files
