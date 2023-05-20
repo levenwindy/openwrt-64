@@ -205,9 +205,9 @@ jobs:
       if: env.BUILD2 == 'true'
       run: |
         cd openwrt
-        sed -i 's/# CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7 is not set/CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7=y/g' .config
-        sed -i 's/CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7-108M=y/# CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7-108M is not set/g' .config
-        sed -i 's/CONFIG_TARGET_PROFILE="DEVICE_mt7981-360-t7-108M"/CONFIG_TARGET_PROFILE="DEVICE_mt7981-360-t7"/g' .config
+        sed -i 's/# CONFIG_TARGET_mediatek_filogic_DEVICE_qihoo_360-t7-stock is not set/CONFIG_TARGET_mediatek_filogic_DEVICE_qihoo_360-t7-stock=y/g' .config
+        sed -i 's/CONFIG_TARGET_mediatek_filogic_DEVICE_qihoo_360-t7-ubootmod=y/# CONFIG_TARGET_mediatek_filogic_DEVICE_qihoo_360-t7-ubootmod is not set/g' .config
+        sed -i 's/CONFIG_TARGET_PROFILE="DEVICE_qihoo_360-t7-ubootmod"/CONFIG_TARGET_PROFILE="DEVICE_qihoo_360-t7-stock"/g' .config
         cat .config
         
     - name: Download package2
