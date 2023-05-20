@@ -88,7 +88,7 @@ jobs:
     - name: 替换成旧版upnp
       run: |
         if [ -z $UPNP ]; then git clone -b $UPNP https://github.com/immortalwrt/packages $UPNP ;fi && \
-            cp -r $UPNP/packages/net/miniupnpd openwrt/feeds/luci/applications/ && \
+            cp -r $UPNP/net/miniupnpd openwrt/feeds/luci/applications/ && \
             rm -rf $UPNP && ls && \
             echo "------------------------------------------------------------------------" && \
             echo "feeds/luci/applications/: " && \
