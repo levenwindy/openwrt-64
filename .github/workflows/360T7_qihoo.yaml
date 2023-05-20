@@ -21,8 +21,9 @@ env:
   TZ: Asia/Shanghai
   NAME: 360T7_qihoo
   ORGIN: 5.15
-  # 替换内核 如 NEW_PATCHVER: 5.15  KERNEL_PATCHVER     h大版 # NEW_TESTING_PATCHVER: 5.15
+  # 替换内核 如 NEW_PATCHVER: 5.15  KERNEL_PATCHVER     h大版 # 
   NEW_PATCHVER: 5.15   
+  NEW_TESTING_PATCHVER: 5.15
   # 6.1均失败
   PLATFORM: mediatek
   # 编译核心数 0 默认最多核新 ,1为单核 2 双核 如此类推
@@ -75,7 +76,7 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        if [ $REPO_BRANCH != '' ];then git clone $REPO_URL openwrt ;else git clone -b $REPO_BRANCH $REPO_URL openwrt fi
+        if [ $REPO_BRANCH != '' ];then git clone $REPO_URL openwrt ;else git clone -b $REPO_BRANCH $REPO_URL openwrt ;fi
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         
     - name: Git chechkout
