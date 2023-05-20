@@ -1,0 +1,288 @@
+name: 360T7_qihoo
+  
+on:
+  push:
+    # branches: [ master ]
+    paths:
+      - 'config/360T7_qihoo.config'
+
+env:
+  REPO_URL: https://github.com/immortalwrt/immortalwrt
+  REPO_BRANCH: openwrt-21.02
+  # 选则历史版本 checkout
+  # CHECKOUT: f67f60b809b433c42bc86dad60fbdef0fb866a0a
+  CONFIG_FILE: config/360T7_qihoo.config
+  # true 不能用于make
+  SSH: tru
+  NgrokID: 1 
+  DIY_P1_SH: diy-360T7.sh
+  DIY_P2_SH: diy-immortalwrt.sh
+  TZ: Asia/Shanghai
+  NAME: 360T7_qihoo
+  ORGIN: 5.15
+  # 替换内核 如 NEW_PATCHVER: 5.15  KERNEL_PATCHVER     h大版 # NEW_TESTING_PATCHVER: 5.15
+  NEW_PATCHVER: 5.15   
+  # 6.1均失败
+  PLATFORM: mediatek
+  # 编译核心数 0 默认最多核新 ,1为单核 2 双核 如此类推
+  NPROC: 0
+  # 下载线程数 DOWNLOAD
+  DOWNLOAD: 8
+  # 构建1 uboot修改版 固件 true
+  BUILD1: true
+  # 构建2 uboot原版 固件 true
+  BUILD2: tru
+  # immortalwrt 官方没有
+  # MTKHQOS: tru
+jobs:
+  build:
+    #runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    # runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+    
+    - name: SSH via Ngrok
+      if: env.SSH == 'true'
+      run: |
+        curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
+      env:
+        # After sign up on the https://ngrok.com/ 
+        # You can find this token here: https://dashboard.ngrok.com/get-started/setup
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN_1 }}
+        # This password you will use when authorizing via SSH
+        USER_PASS: ${{ secrets.USER_PASS_1 }}
+        
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+        # sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
+      run: |
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+        sudo -E apt-get -qq update
+        sudo -E apt-get -qq install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib \
+              gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget qemu-utils
+        sudo -E apt-get -qq autoremove --purge
+        sudo -E apt-get -qq clean
+        sudo timedatectl set-timezone "$TZ"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+        
+    - name: Clone source code 
+      working-directory: /workdir
+      run: |
+        df -hT $PWD
+        git clone -b $REPO_BRANCH $REPO_URL openwrt
+        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        
+    - name: Git chechkout
+      working-directory: /workdir
+      run: |
+        cd openwrt
+        if [ $CHECKOUT != "" ]; then  git checkout $CHECKOUT ; else echo "不改变版本" ; fi
+        
+        
+    - name: Load custom feeds
+      run: |
+        chmod +x bash/$DIY_P1_SH
+        cd openwrt
+        $GITHUB_WORKSPACE/bash/$DIY_P1_SH
+        
+    # 237176253 支持硬件QOS padavanonly/immortalwrtARM
+    - name: cat hnat_nf_hook.c 硬件 QoS
+      if: env.MTKHQOS == 'true'
+      run: |
+        cd openwrt
+        sed -i "s/entry->ipv4_hnapt.winfo.wcid = skb_hnat_wc_id(skb);/entry->ipv4_hnapt.winfo.wcid = skb_hnat_wc_id(skb);\n			entry->ipv4_hnapt.iblk2.fqos = (IS_HQOS_MODE) ? 1 : 0;/g" target/linux/mediatek/files-5.4/drivers/net/ethernet/mediatek/mtk_hnat/hnat_nf_hook.c
+        sed -i "s/entry->ipv6_5t_route.winfo.wcid = skb_hnat_wc_id(skb);/entry->ipv6_5t_route.winfo.wcid = skb_hnat_wc_id(skb);\n			entry->ipv6_5t_route.iblk2.fqos = (IS_HQOS_MODE) ? 1 : 0;/g" target/linux/mediatek/files-5.4/drivers/net/ethernet/mediatek/mtk_hnat/hnat_nf_hook.c
+        cat target/linux/mediatek/files-5.4/drivers/net/ethernet/mediatek/mtk_hnat/hnat_nf_hook.c
+        
+    - name: 替换内核1
+      run: |
+        cd openwrt
+        if [ $NEW_PATCHVER != '' ];then sed -i "s/KERNEL_PATCHVER:=$ORGIN/KERNEL_PATCHVER:=$NEW_PATCHVER/g" ./target/linux/$PLATFORM/Makefile ;fi
+        if [ $NEW_TESTING_PATCHVER != '' ];then sed -i "s/KERNEL_TESTING_PATCHVER:=$ORGIN/KERNEL_TESTING_PATCHVER:=$NEW_TESTING_PATCHVER/g" ./target/linux/$PLATFORM/Makefile ;fi
+        cat  ./target/linux/$PLATFORM/Makefile
+    
+    - name: Update feeds
+      run: cd openwrt && ./scripts/feeds update -a
+
+    - name: Install feeds
+      run: cd openwrt && ./scripts/feeds install -a
+
+    - name: Load custom configuration
+      run: |
+        [ -e files ] && mv files openwrt/files
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        chmod +x $DIY_P2_SH
+        cd openwrt
+        $GITHUB_WORKSPACE/$DIY_P2_SH
+        
+    - name: Download package
+      if: env.BUILD1 == 'true'
+      id: package
+        # make download
+      run: |
+        cd openwrt
+        make defconfig
+        make download -j$DOWNLOAD
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+        
+    - name: Compile1 the firmware
+      if: env.BUILD1 == 'true'
+        # if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
+        # make -j$(nproc) || make -j1 
+      id: compile1
+      run: |
+        cd openwrt
+        echo -e "$(nproc) thread compile"
+        if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j$NPROC ; fi
+        echo "::set-output name=status::success"
+        
+    - name: failure Compile1 the firmware
+      if: ${{ failure() }}
+      id: failure_compile1
+      run: |
+        cd openwrt
+        make -j1 V=s 
+        echo "::set-output name=status::success"
+         
+    - name : 上传附件 targets
+      if: env.BUILD1 == 'true'
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_qihoo_modified-U-Boot_targets
+        path: openwrt/bin/targets/
+        
+    - name : packages
+      if: env.BUILD1 == 'true'
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_qihoo_modified-U-Boot_packages
+        path: openwrt/bin/targets/*/*/packages
+        if-no-files-found: error
+        
+    - name : kernel.bin
+      if: env.BUILD1 == 'true'
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_qihoo_modified-U-Boot-kernel
+        path: openwrt/bin/targets/*/*/*initramfs-kernel.bin
+        if-no-files-found: error
+        
+    - name : factory.bin
+      if: env.BUILD1 == 'true'
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_qihoo_modified-U-Boot-factory
+        path: openwrt/bin/targets/*/*/*squashfs-factory.bin
+        if-no-files-found: error
+        
+    - name : 360T7_qihoo_modified-U-Boot-sysupgrade
+      if: env.BUILD1 == 'true'
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_qihoo_modified-U-Boot-sysupgrade
+        path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
+        if-no-files-found: error
+        
+    - name : packages2
+      if: env.BUILD1 == 'true'
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_qihoo_modified-U-Boot_packages2
+        path: openwrt/bin/packages
+        if-no-files-found: error
+
+    - name: test 360T7.config
+      if: env.BUILD2 == 'true'
+      run: |
+        cd openwrt
+        sed -i 's/# CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7 is not set/CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7=y/g' .config
+        sed -i 's/CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7-108M=y/# CONFIG_TARGET_mediatek_mt7981_DEVICE_mt7981-360-t7-108M is not set/g' .config
+        sed -i 's/CONFIG_TARGET_PROFILE="DEVICE_mt7981-360-t7-108M"/CONFIG_TARGET_PROFILE="DEVICE_mt7981-360-t7"/g' .config
+        cat .config
+        
+    - name: Download package2
+      if: env.BUILD2 == 'true'
+      id: package2
+        # make download
+      run: |
+        cd openwrt
+        rm -rf bin
+        make defconfig
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+        
+    - name: Compile the firmware2
+      if: env.BUILD2 == 'true'
+        # if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j1 V=s ; fi
+        # make -j$(nproc) || make -j1 
+      id: compile2
+      run: |
+        cd openwrt
+        echo -e "$(nproc) thread compile"
+        if [ $NPROC -eq 0 ]; then   make -j$(nproc) ; else make -j$NPROC ; fi
+        echo "::set-output name=status::success"
+        
+    - name: failure Compile the firmware2
+      if: ${{ failure() }}
+      id: failure_compile2
+      run: |
+        cd openwrt
+        make -j1 V=s 
+        echo "::set-output name=status::success"
+         
+    - name : 上传附件 360T7_qihoo_targets
+      if: env.BUILD2 == 'true'
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_qihoo_targets
+        path: openwrt/bin/targets/
+        
+    - name : 360T7_qihoo_packages
+      if: env.BUILD2 == 'true'
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_qihoo_packages
+        path: openwrt/bin/targets/*/*/packages
+        if-no-files-found: error
+        
+    - name : 360T7_237_initramfs-kernel.bin
+      if: env.BUILD2 == 'true'
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_qihoo-initramfs-kernel
+        path: openwrt/bin/targets/*/*/*initramfs-kernel.bin
+        if-no-files-found: error
+        
+        #3606T7 无 factory输出
+    #- name : squashfs-factory.bin
+    #  if: env.BUILD2 == 'true'
+    #  uses: actions/upload-artifact@master
+    #  with:
+    #    name: 360T7_qihoo-squashfs-factory
+    #    path: openwrt/bin/targets/*/*/*squashfs-factory.bin
+    #    if-no-files-found: error
+        
+    - name : 360T7_qihoo-squashfs-sysupgrade
+      if: env.BUILD2 == 'true'
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_qihoo-squashfs-sysupgrade
+        path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
+        if-no-files-found: error
+        
+    - name : packages2
+      if: env.BUILD2 == 'true'
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_qihoo_packages2
+        path: openwrt/bin/packages
+        if-no-files-found: error
+
+      
