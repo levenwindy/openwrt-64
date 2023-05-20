@@ -148,9 +148,7 @@ jobs:
       if: ${{ failure() }}
       id: failure_compile1
       run: |
-        cd openwrt
-        make -j1 V=s 
-        echo "::set-output name=status::success"
+        if [ $BUILD1 == 'true' ]; then cd openwrt && make -j1 V=s &&  echo "::set-output name=status::success"  ; fi
          
     - name : 上传附件 targets
       if: env.BUILD1 == 'true'
@@ -235,9 +233,8 @@ jobs:
       if: ${{ failure() }}
       id: failure_compile2
       run: |
-        cd openwrt
-        make -j1 V=s 
-        echo "::set-output name=status::success"
+        if [ $BUILD2 == 'true' ]; then cd openwrt && make -j1 V=s &&  echo "::set-output name=status::success"  ; fi
+        
          
     - name : 上传附件 360T7_qihoo_targets
       if: env.BUILD2 == 'true'
