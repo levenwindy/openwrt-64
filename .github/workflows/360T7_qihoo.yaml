@@ -8,8 +8,9 @@ on:
 
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
-  REPO_BRANCH: openwrt-21.02
-  # 选则历史版本 checkout
+  # 选择仓库
+  # REPO_BRANCH: openwrt-21.02
+  # 选则具体历史版本 checkout
   # CHECKOUT: f67f60b809b433c42bc86dad60fbdef0fb866a0a
   CONFIG_FILE: config/360T7_qihoo.config
   # true 不能用于make
@@ -74,7 +75,7 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        git clone -b $REPO_BRANCH $REPO_URL openwrt
+        if [ $REPO_BRANCH != '' ];then git clone $REPO_URL openwrt ;else git clone -b $REPO_BRANCH $REPO_URL openwrt fi
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         
     - name: Git chechkout
