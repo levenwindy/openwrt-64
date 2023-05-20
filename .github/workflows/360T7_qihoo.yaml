@@ -36,6 +36,8 @@ env:
   BUILD2: true
   # immortalwrt 官方没有
   # MTKHQOS: tru
+  # 旧版本
+  UPNP: openwrt-18.06
 jobs:
   build:
     #runs-on: ubuntu-latest
@@ -82,6 +84,16 @@ jobs:
         df -hT $PWD
         if [ -z $REPO_BRANCH ]; then git clone $REPO_URL openwrt ; else git clone -b $REPO_BRANCH $REPO_URL openwrt ;fi
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        
+    - name: 替换成旧版upnp
+      if: env.UPNP == 'true'
+      run: |
+        if [ -z $UPNP ]; then git clone -b $UPNP https://github.com/immortalwrt/packages $UPNP ;fi
+        cp -r $UPNP/packages/net/miniupnpd openwrt/feeds/luci/applications/
+        rm -rf $UPNP && ls
+        echo "------------------------------------------------------------------------"
+        echo "feeds/luci/applications/: "
+        ls openwrt/feeds/luci/applications/
         
     - name: Git chechkout
       working-directory: /workdir
