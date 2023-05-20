@@ -260,13 +260,14 @@ jobs:
         path: openwrt/bin/targets/*/*/*initramfs-kernel.bin
         if-no-files-found: error
         
-    - name : squashfs-factory.bin
-      if: env.BUILD2 == 'true'
-      uses: actions/upload-artifact@master
-      with:
-        name: 360T7_mini-squashfs-factory
-        path: openwrt/bin/targets/*/*/*squashfs-factory.bin
-        if-no-files-found: error
+        #3606T7 无 factory输出
+    #- name : squashfs-factory.bin
+    #  if: env.BUILD2 == 'true'
+    #  uses: actions/upload-artifact@master
+    #  with:
+    #    name: 360T7_mini-squashfs-factory
+    #    path: openwrt/bin/targets/*/*/*squashfs-factory.bin
+    #    if-no-files-found: error
         
     - name : 360T7_mini-squashfs-sysupgrade
       if: env.BUILD2 == 'true'
