@@ -86,7 +86,6 @@ jobs:
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         
     - name: 替换成旧版upnp
-      if: env.UPNP == 'true'
       run: |
         if [ -z $UPNP ]; then git clone -b $UPNP https://github.com/immortalwrt/packages $UPNP ;fi && \
             cp -r $UPNP/packages/net/miniupnpd openwrt/feeds/luci/applications/ && \
