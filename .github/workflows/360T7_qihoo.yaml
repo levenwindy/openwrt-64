@@ -126,7 +126,7 @@ jobs:
             echo "------------------------------------------------------------------------"  && \
             if [ -n $UPNP ]; then git clone -b $UPNP https://github.com/immortalwrt/luci $UPNP ;fi && \
             rm -rf openwrt/feeds/luci/applications/luci-app-upnp && \
-            ls openwrt/feeds/luci/applications/
+            ls openwrt/feeds/luci/applications/  && \
             cp -r $UPNP/luci/applications/luci-app-upnp openwrt/feeds/luci/applications/ && \
             rm -rf $UPNP && \
             echo "------------------------------------------------------------------------"  && \
