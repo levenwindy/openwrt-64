@@ -171,22 +171,29 @@ jobs:
       run: |
         if [ $BUILD1 == 'true' ]; then cd openwrt && make -j1 V=s &&  echo "::set-output name=status::success"  ; fi
          
-    - name : 上传附件 targets
+    - name : 1.总附件 bin
+      if: env.BUILD1 == 'true'
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_qihoo_modified-U-Boot_bin
+        path: openwrt/bin/
+        
+    - name : 1.targets
       if: env.BUILD1 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_qihoo_modified-U-Boot_targets
         path: openwrt/bin/targets/
         
-    - name : packages
+    - name : 1.packages
       if: env.BUILD1 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_qihoo_modified-U-Boot_packages
-        path: openwrt/bin/targets/*/*/packages
+        path: openwrt/bin/packages
         if-no-files-found: error
         
-    - name : kernel.bin
+    - name : 1.kernel.bin
       if: env.BUILD1 == 'true'
       uses: actions/upload-artifact@master
       with:
@@ -194,7 +201,7 @@ jobs:
         path: openwrt/bin/targets/*/*/*initramfs-kernel.bin
         if-no-files-found: error
         
-    - name : factory.bin
+    - name : 1.factory.bin
       if: env.BUILD1 == 'true'
       uses: actions/upload-artifact@master
       with:
@@ -202,7 +209,7 @@ jobs:
         path: openwrt/bin/targets/*/*/*squashfs-factory.bin
         if-no-files-found: error
         
-    - name : 360T7_qihoo_modified-U-Boot-sysupgrade
+    - name : 1.sysupgrade
       if: env.BUILD1 == 'true'
       uses: actions/upload-artifact@master
       with:
@@ -210,12 +217,12 @@ jobs:
         path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
         if-no-files-found: error
         
-    - name : packages2
+    - name : 1.packages2
       if: env.BUILD1 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_qihoo_modified-U-Boot_packages2
-        path: openwrt/bin/packages
+        path: openwrt/bin/targets/*/*/packages
         if-no-files-found: error
 
     - name: test 360T7.config
@@ -257,14 +264,21 @@ jobs:
         if [ $BUILD2 == 'true' ]; then cd openwrt && make -j1 V=s &&  echo "::set-output name=status::success"  ; fi
         
          
-    - name : 上传附件 360T7_qihoo_targets
+    - name : 2.总附件 bin
+      if: env.BUILD2 == 'true'
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_qihoo_bin
+        path: openwrt/bin/
+         
+    - name : 2.targets
       if: env.BUILD2 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_qihoo_targets
         path: openwrt/bin/targets/
         
-    - name : 360T7_qihoo_packages
+    - name : 2.packages
       if: env.BUILD2 == 'true'
       uses: actions/upload-artifact@master
       with:
@@ -272,7 +286,7 @@ jobs:
         path: openwrt/bin/targets/*/*/packages
         if-no-files-found: error
         
-    - name : 360T7_237_initramfs-kernel.bin
+    - name : 2.kernel.bin
       if: env.BUILD2 == 'true'
       uses: actions/upload-artifact@master
       with:
@@ -281,15 +295,15 @@ jobs:
         if-no-files-found: error
         
         #3606T7 无 factory输出
-    #- name : squashfs-factory.bin
-    #  if: env.BUILD2 == 'true'
-    #  uses: actions/upload-artifact@master
-    #  with:
-    #    name: 360T7_qihoo-squashfs-factory
-    #    path: openwrt/bin/targets/*/*/*squashfs-factory.bin
-    #    if-no-files-found: error
+    - name : 2.factory.bin
+      if: env.BUILD2 == 'true'
+      uses: actions/upload-artifact@master
+      with:
+        name: 360T7_qihoo-squashfs-factory
+        path: openwrt/bin/targets/*/*/*squashfs-factory.bin
+        if-no-files-found: error
         
-    - name : 360T7_qihoo-squashfs-sysupgrade
+    - name : 2.sysupgrade
       if: env.BUILD2 == 'true'
       uses: actions/upload-artifact@master
       with:
@@ -297,12 +311,12 @@ jobs:
         path: openwrt/bin/targets/*/*/*squashfs-sysupgrade.bin
         if-no-files-found: error
         
-    - name : packages2
+    - name : 2.packages2
       if: env.BUILD2 == 'true'
       uses: actions/upload-artifact@master
       with:
         name: 360T7_qihoo_packages2
-        path: openwrt/bin/packages
+        path: openwrt/bin/targets/*/*/packages
         if-no-files-found: error
 
       
