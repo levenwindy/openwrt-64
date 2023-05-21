@@ -33,7 +33,7 @@ sed -i 's/time.cloudflare.com/cn.ntp.org.cn/g'  package/base-files/files/bin/con
 sed -i 's/pool.ntp.org/cn.pool.ntp.org/g'  package/base-files/files/bin/config_generate
 
 # 替换腾讯 opkg 源
-sed -i 's/mirrors.vsean.net/mirrors.cloud.tencent.com/g'  package/emortal/default-settings/files/99-default-settings-chinese
+# sed -i 's/mirrors.vsean.net/mirrors.cloud.tencent.com/g'  package/emortal/default-settings/files/99-default-settings-chinese
 
 # 237176253 硬件QOS padavanonly/immortalwrtARM
 # sed -i "s/entry->ipv4_hnapt.winfo.wcid = skb_hnat_wc_id(skb);/entry->ipv4_hnapt.winfo.wcid = skb_hnat_wc_id(skb);\n			entry->ipv4_hnapt.iblk2.fqos = (IS_HQOS_MODE) ? 1 : 0;/g" target/linux/mediatek/files-5.4/drivers/net/ethernet/mediatek/mtk_hnat/hnat_nf_hook.c
