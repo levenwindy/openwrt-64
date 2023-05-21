@@ -98,15 +98,6 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/bash/$DIY_P1_SH
         
-    # 237176253 支持硬件QOS padavanonly/immortalwrtARM
-    - name: cat hnat_nf_hook.c 硬件 QoS
-      if: env.MTKHQOS == 'true'
-      run: |
-        cd openwrt
-        sed -i "s/entry->ipv4_hnapt.winfo.wcid = skb_hnat_wc_id(skb);/entry->ipv4_hnapt.winfo.wcid = skb_hnat_wc_id(skb);\n			entry->ipv4_hnapt.iblk2.fqos = (IS_HQOS_MODE) ? 1 : 0;/g" target/linux/mediatek/files-5.4/drivers/net/ethernet/mediatek/mtk_hnat/hnat_nf_hook.c
-        sed -i "s/entry->ipv6_5t_route.winfo.wcid = skb_hnat_wc_id(skb);/entry->ipv6_5t_route.winfo.wcid = skb_hnat_wc_id(skb);\n			entry->ipv6_5t_route.iblk2.fqos = (IS_HQOS_MODE) ? 1 : 0;/g" target/linux/mediatek/files-5.4/drivers/net/ethernet/mediatek/mtk_hnat/hnat_nf_hook.c
-        cat target/linux/mediatek/files-5.4/drivers/net/ethernet/mediatek/mtk_hnat/hnat_nf_hook.c
-        
     - name: 替换内核1
       run: |
         cd openwrt
@@ -124,9 +115,13 @@ jobs:
             cp -r $UPNP/net/miniupnpd openwrt/feeds/luci/applications/ && \
             rm -rf $UPNP && \
             echo "------------------------------------------------------------------------"  && \
-            if [ -n $UPNP ]; then git clone -b $UPNP https://github.com/immortalwrt/luci $UPNP ;fi && \
+            ls openwrt/feeds/luci/applications/
+      
+    - name: 替换成旧版miniupnp
+      working-directory: /workdir
+      run: |
+        if [ -n $UPNP ]; then git clone -b $UPNP https://github.com/immortalwrt/luci $UPNP ;fi && \
             rm -rf openwrt/feeds/luci/applications/luci-app-upnp && \
-            ls openwrt/feeds/luci/applications/  && \
             cp -r $UPNP/luci/applications/luci-app-upnp openwrt/feeds/luci/applications/ && \
             rm -rf $UPNP && \
             echo "------------------------------------------------------------------------"  && \
