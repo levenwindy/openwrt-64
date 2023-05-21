@@ -37,7 +37,7 @@ env:
   # immortalwrt 官方没有
   # MTKHQOS: tru
   # 旧版本
-  UPNP: openwrt-18.06
+  # UPNP: openwrt-18.06
 jobs:
   build:
     #runs-on: ubuntu-latest
