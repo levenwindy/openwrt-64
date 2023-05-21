@@ -116,19 +116,26 @@ jobs:
     
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
-
-    - name: Install feeds
-      run: cd openwrt && ./scripts/feeds install -a
       
-    - name: 替换成旧版upnp
+    - name: 替换成旧版miniupnp
       working-directory: /workdir
       run: |
         if [ -n $UPNP ]; then git clone -b $UPNP https://github.com/immortalwrt/packages $UPNP ;fi && \
             cp -r $UPNP/net/miniupnpd openwrt/feeds/luci/applications/ && \
             rm -rf $UPNP && \
             echo "------------------------------------------------------------------------"  && \
+            if [ -n $UPNP ]; then git clone -b $UPNP https://github.com/immortalwrt/luci $UPNP ;fi && \
+            rm -rf openwrt/feeds/luci/applications/luci-app-upnp && \
+            ls openwrt/feeds/luci/applications/
+            cp -r $UPNP/luci/applications/luci-app-upnp openwrt/feeds/luci/applications/ && \
+            rm -rf $UPNP && \
+            echo "------------------------------------------------------------------------"  && \
             echo "feeds/luci/applications/: "  && \
             ls openwrt/feeds/luci/applications/
+        
+
+    - name: Install feeds
+      run: cd openwrt && ./scripts/feeds install -a
             
     - name: Load custom configuration
       run: |
