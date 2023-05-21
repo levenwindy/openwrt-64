@@ -36,7 +36,8 @@ env:
   BUILD2: true
   # immortalwrt 官方没有
   # MTKHQOS: tru
-  # 旧版本
+  # 替换 UPNPCHANGE true
+  UPNPCHANGE: tru
   # UPNP: openwrt-18.06
 jobs:
   build:
@@ -109,6 +110,7 @@ jobs:
       run: cd openwrt && ./scripts/feeds update -a
       
     - name: 替换成旧版miniupnp
+      if: env.UPNPCHANGE == 'true'
       working-directory: /workdir
       run: |
         if [ -n $UPNP ]; then git clone -b $UPNP https://github.com/immortalwrt/packages $UPNP ;fi && \
@@ -119,6 +121,7 @@ jobs:
             ls openwrt/feeds/luci/applications/
       
     - name: 替换成旧版upnp
+      if: env.UPNPCHANGE == 'true'
       working-directory: /workdir
       run: |
         if [ -n $UPNP ]; then git clone -b $UPNP https://github.com/immortalwrt/luci $UPNP ;fi && \
