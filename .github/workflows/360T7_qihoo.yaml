@@ -122,9 +122,8 @@ jobs:
     - name: 替换成旧版miniupnp
       run: |
         cd openwrt
-        if: [ -n env.MINIUPNPD ];then
+        if: [ -n $MINIUPNPD ];then
         rm -rf feeds/packages/net/miniupnpd && svn co https://github.com/immortalwrt/packages/branches/$MINIUPNPD/net/miniupnpd feeds/packages/net/miniupnpd  ;fi
-        
         ls feeds/packages/net/miniupnpd
         
     - name: Download package
