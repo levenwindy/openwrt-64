@@ -37,6 +37,7 @@ env:
   # immortalwrt 官方没有
   # MTKHQOS: tru
   # 替换 miniupnpd 版本
+  # UPNPSWITCH: true
   # MINIUPNPD: openwrt-18.06
 jobs:
   build:
@@ -120,7 +121,7 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_P2_SH
       
     - name: 替换成旧版miniupnp
-      if: env.MINIUPNPD != ""
+      if: env.UPNPSWITCH == "true"
       run: |
         cd openwrt
         if [ -n $MINIUPNPD ];then rm -rf feeds/packages/net/miniupnpd && svn co https://github.com/immortalwrt/packages/branches/$MINIUPNPD/net/miniupnpd feeds/packages/net/miniupnpd  ;fi
