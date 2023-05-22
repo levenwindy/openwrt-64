@@ -36,9 +36,8 @@ env:
   BUILD2: true
   # immortalwrt 官方没有
   # MTKHQOS: tru
-  # 替换 UPNPCHANGE true
-  UPNPCHANGE: tru
-  # UPNP: openwrt-18.06
+  # 替换 miniupnpd 版本
+  MINIUPNPD: openwrt-18.06
 jobs:
   build:
     #runs-on: ubuntu-latest
@@ -108,29 +107,6 @@ jobs:
     
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
-      
-    - name: 替换成旧版miniupnp
-      if: env.UPNPCHANGE == 'true'
-      working-directory: /workdir
-      run: |
-        if [ -n $UPNP ]; then git clone -b $UPNP https://github.com/immortalwrt/packages $UPNP ;fi && \
-            cp -r $UPNP/net/miniupnpd openwrt/feeds/luci/applications/ && \
-            rm -rf $UPNP && \
-            rm -rf openwrt/feeds/luci/applications/luci-app-upnp && \
-            echo "------------------------------------------------------------------------"  && \
-            ls openwrt/feeds/luci/applications/
-      
-    - name: 替换成旧版upnp
-      if: env.UPNPCHANGE == 'true'
-      working-directory: /workdir
-      run: |
-        if [ -n $UPNP ]; then git clone -b $UPNP https://github.com/immortalwrt/luci $UPNP ;fi && \
-            cp -r $UPNP/applications/luci-app-upnp openwrt/feeds/luci/applications/ && \
-            rm -rf $UPNP && \
-            echo "------------------------------------------------------------------------"  && \
-            echo "feeds/luci/applications/: "  && \
-            ls openwrt/feeds/luci/applications/
-        
 
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
@@ -142,6 +118,13 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
+      
+    - name: 替换成旧版miniupnp
+      if: env.MINIUPNPD != ""
+      run: |
+        cd openwrt
+        rm -rf feeds/packages/net/miniupnpd && svn co https://github.com/immortalwrt/packages/branches/$MINIUPNPD/net/miniupnpd feeds/packages/net/miniupnpd
+        ls feeds/packages/net/miniupnpd
         
     - name: Download package
       if: env.BUILD1 == 'true'
