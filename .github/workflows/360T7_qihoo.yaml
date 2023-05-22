@@ -120,10 +120,11 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_P2_SH
       
     - name: 替换成旧版miniupnp
-      if: -n env.MINIUPNPD 
       run: |
         cd openwrt
-        rm -rf feeds/packages/net/miniupnpd && svn co https://github.com/immortalwrt/packages/branches/$MINIUPNPD/net/miniupnpd feeds/packages/net/miniupnpd
+        if: [ -n env.MINIUPNPD ];then
+        rm -rf feeds/packages/net/miniupnpd && svn co https://github.com/immortalwrt/packages/branches/$MINIUPNPD/net/miniupnpd feeds/packages/net/miniupnpd  ;fi
+        
         ls feeds/packages/net/miniupnpd
         
     - name: Download package
