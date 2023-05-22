@@ -121,7 +121,7 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_P2_SH
       
     - name: 替换成旧版miniupnp
-      if: env.UPNPSWITCH == "true"
+      if: env.UPNPSWITCH == 'true'
       run: |
         cd openwrt
         if [ -n $MINIUPNPD ];then rm -rf feeds/packages/net/miniupnpd && svn co https://github.com/immortalwrt/packages/branches/$MINIUPNPD/net/miniupnpd feeds/packages/net/miniupnpd  ;fi
