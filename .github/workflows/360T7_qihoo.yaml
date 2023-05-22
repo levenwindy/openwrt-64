@@ -37,7 +37,7 @@ env:
   # immortalwrt 官方没有
   # MTKHQOS: tru
   # 替换 miniupnpd 版本
-  # UPNPSWITCH: true
+  UPNPSWITCH: tru
   # MINIUPNPD: openwrt-18.06
 jobs:
   build:
