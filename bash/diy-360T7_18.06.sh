@@ -33,4 +33,4 @@ sed -i 's/time.cloudflare.com/cn.ntp.org.cn/g'  package/base-files/files/bin/con
 sed -i 's/pool.ntp.org/cn.pool.ntp.org/g'  package/base-files/files/bin/config_generate
 
 # 替换腾讯 opkg 源 21+ ImmortalWrt只有 mirrors.vsean.net 和 北大源 18.06有腾讯源
-sed -i 's,mirrors.vsean.net,mirrors.cloud.tencent.com,g'  package/emortal/default-settings/files/99-default-settings-chinese
+# sed -i 's,mirrors.vsean.net,mirrors.cloud.tencent.com,g'  package/emortal/default-settings/files/99-default-settings-chinese
