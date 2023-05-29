@@ -1,0 +1,68 @@
+name: Multi-OpenWrt Images
+  
+on:
+  push:
+    paths: 
+      - '.github/workflows/push.yml'
+      
+env:
+  TZ: Asia/Shanghai
+  SSH_KEY: ${{ secrets.SSH_KEY }}
+  SSH_PUB: ${{ secrets.SSH_PUB }}
+  EMAIL_GITHUB: ${{ secrets.EMAIL_GITHUB }}
+  NAME_GITHUB: ${{ secrets.NAME_GITHUB }}
+
+jobs:
+  build:
+    #runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+        
+      - name: PUSH
+          # -u 是预设 ，下次 直接 push
+            # git branch -M master
+            # 推送 master 到 RouterFirmware 节点
+            # -M master 指定分支
+            #tee << EOF > ~/.ssh/id_rsa
+           # ${{ secrets.SSH_PUB }}
+           # EOF
+            #git branch -M master
+            #echo '5'
+           # git remote add origin git@github.com:levendwindy/RouterFirmware.git
+            # ssh-agent -s      sudo ssh-add ~/.ssh/id_rsa
+           #  sudo git config --global user.email "${{ secrets.EMAIL_GITHUB }}" && echo 'git 邮箱设置成功 '
+           #  sudo git config --global user.name  "${{ secrets.NAME_GITHUB }}"
+        env:
+          SOURCE_REPO: 'https://github.com/levendwindy/RouterFirmware'
+          DESTINATION_REPO: 'git@github.com:levendwindy/RouterFirmware.git'
+        run: |
+            if [ ! -f ~/.ssh ];then 
+              mkdir -p ~/.ssh  && echo '创建 .ssh 文件夹 成功 '
+            fi
+            echo "$SSH_KEY" > ~/.ssh/id_rsa && echo '创建 id_rsa 文件 成功'
+            chmod 600 ~/.ssh/id_rsa
+            echo "StrictHostKeyChecking no" >> ~/.ssh/config
+            git clone  "$SOURCE_REPO" && cd `basename "$SOURCE_REPO"` || ls -al
+            mkdir openwrt && cd openwrt
+            touch 360.txt
+            # git config --global user.email $EMAIL_GITHUB && echo 'git 邮箱设置成功 '
+            # git config --global user.name  $NAME_GITHUB  && echo 'git 密码设置成功 '
+            git init
+            git add *
+            git commit -m "提交信息" && echo '提交信息成功 '
+            echo '1'
+            git branch -M master
+            sudo git remote add origin git@github.com:levendwindy/RouterFirmware.git
+            echo '2'
+            sudo git push -u origin master
+            echo '3'
+
+        
+        
+        
+        
+        
+        
+        
