@@ -56,9 +56,9 @@ jobs:
             git branch -M master
             git remote -v
             echo '4'
-            # git remote add origin $DESTINATION_REPO
+            git remote add origin $DESTINATION_REPO
             echo '2'
-            git push origin HEAD
+            git push
             echo '3'
 
         
