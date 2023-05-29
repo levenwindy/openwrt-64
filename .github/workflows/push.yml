@@ -19,24 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@main
-        
+      
       - name: PUSH
-          # -u 是预设 ，下次 直接 push
-            # git branch -M master
-            # 推送 master 到 RouterFirmware 节点
-            # -M master 指定分支
-            #tee << EOF > ~/.ssh/id_rsa
-           # ${{ secrets.SSH_PUB }}
-           # EOF
-            #git branch -M master
-            #echo '5'
-           # git remote add origin git@github.com:levendwindy/RouterFirmware.git
-            # ssh-agent -s      sudo ssh-add ~/.ssh/id_rsa
-           #  sudo git config --global user.email "${{ secrets.EMAIL_GITHUB }}" && echo 'git 邮箱设置成功 '
-           #  sudo git config --global user.name  "${{ secrets.NAME_GITHUB }}"
-            # 本地仓库分支删除
-            # git branch -d main
-            # git push --delete main
         env:
           SOURCE_REPO: 'https://github.com/levenwindy/push'
           DESTINATION_REPO: 'git@github.com:levenwindy/push.git'
@@ -55,6 +39,7 @@ jobs:
             git remote -v
             echo '3'
             git branch -d main
+            git remote add origin $DESTINATION_REPO
             echo '4'
             git push --delete origin main
             
