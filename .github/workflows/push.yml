@@ -50,10 +50,11 @@ jobs:
             git clone  "$SOURCE_REPO" && cd `basename "$SOURCE_REPO"` || ls -al
             # mkdir openwrt && cd openwrt
             git checkout master
-            git branch -d main
             git config --global user.email $EMAIL_GITHUB && echo 'git 邮箱设置成功 '
             git config --global user.name  $NAME_GITHUB  && echo 'git 密码设置成功 '
             git remote -v
+            echo '3'
+            git branch -d main
             echo '4'
             git push --delete origin main
             
