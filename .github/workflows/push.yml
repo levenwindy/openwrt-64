@@ -58,7 +58,7 @@ jobs:
             echo '4'
              # git remoteadd origin git@github.com:levendwindy/RouterFirmware.git
             echo '2'
-            sudo git push # -u origin master
+            git push # -u origin master
             echo '3'
 
         
