@@ -56,9 +56,9 @@ jobs:
             git branch -M master
             git remote -v
             echo '4'
-            git remote add origin git@github.com:levendwindy/RouterFirmware.git
+            git remote add origin2 git@github.com:levendwindy/RouterFirmware.git
             echo '2'
-            sudo git push -u origin master
+            sudo git push -u origin2 master
             echo '3'
 
         
