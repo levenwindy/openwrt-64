@@ -34,6 +34,9 @@ jobs:
             # ssh-agent -s      sudo ssh-add ~/.ssh/id_rsa
            #  sudo git config --global user.email "${{ secrets.EMAIL_GITHUB }}" && echo 'git 邮箱设置成功 '
            #  sudo git config --global user.name  "${{ secrets.NAME_GITHUB }}"
+            # 本地仓库分支删除
+            # git branch -d main
+            # git push --delete main
         env:
           SOURCE_REPO: 'https://github.com/levenwindy/push'
           DESTINATION_REPO: 'git@github.com:levenwindy/push.git'
@@ -44,8 +47,11 @@ jobs:
             echo "$SSH_KEY" > ~/.ssh/id_rsa && echo '创建 id_rsa 文件 成功'
             chmod 600 ~/.ssh/id_rsa
             echo "StrictHostKeyChecking no" >> ~/.ssh/config
-            # git clone  "$SOURCE_REPO" && cd `basename "$SOURCE_REPO"` || ls -al
-            mkdir openwrt && cd openwrt
+            git clone  "$SOURCE_REPO" && cd `basename "$SOURCE_REPO"` || ls -al
+            # mkdir openwrt && cd openwrt
+            git checkout master
+            git branch -d main
+            exit 0
             touch 3602.txt
             git config --global user.email $EMAIL_GITHUB && echo 'git 邮箱设置成功 '
             git config --global user.name  $NAME_GITHUB  && echo 'git 密码设置成功 '
