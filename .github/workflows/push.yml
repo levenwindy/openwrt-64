@@ -58,7 +58,7 @@ jobs:
             echo '4'
             # git remote add origin $DESTINATION_REPO
             echo '2'
-            git push #  -u origin master
+            git push origin HEAD
             echo '3'
 
         
