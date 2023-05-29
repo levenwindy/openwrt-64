@@ -51,18 +51,20 @@ jobs:
             # mkdir openwrt && cd openwrt
             git checkout master
             git branch -d main
-            exit 0
-            touch 3602.txt
             git config --global user.email $EMAIL_GITHUB && echo 'git 邮箱设置成功 '
             git config --global user.name  $NAME_GITHUB  && echo 'git 密码设置成功 '
+            git remote -v
+            echo '4'
+            git remote --delete main $DESTINATION_REPO
+            git push -u origin main
+            exit 0
+            
+            touch 3602.txt
             git init
             git add *
             git commit -m "提交信息" && echo '提交信息成功 '
             echo '1'
             # git branch -M master
-            git remote -v
-            echo '4'
-            git remote add origin $DESTINATION_REPO
             echo '2'
             git push -u origin master
             echo '3'
