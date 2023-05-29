@@ -55,8 +55,8 @@ jobs:
             git config --global user.name  $NAME_GITHUB  && echo 'git 密码设置成功 '
             git remote -v
             echo '4'
-            git remote --delete main $DESTINATION_REPO
-            git push -u origin main
+            git push --delete origin main
+            
             exit 0
             
             touch 3602.txt
