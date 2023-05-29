@@ -35,8 +35,8 @@ jobs:
            #  sudo git config --global user.email "${{ secrets.EMAIL_GITHUB }}" && echo 'git 邮箱设置成功 '
            #  sudo git config --global user.name  "${{ secrets.NAME_GITHUB }}"
         env:
-          SOURCE_REPO: 'https://github.com/levendwindy/RouterFirmware'
-          DESTINATION_REPO: 'git@github.com:levendwindy/RouterFirmware.git'
+          SOURCE_REPO: 'https://github.com/levenwindy/push'
+          DESTINATION_REPO: 'git@github.com:levenwindy/push.git'
         run: |
             if [ ! -f ~/.ssh ];then 
               mkdir -p ~/.ssh  && echo '创建 .ssh 文件夹 成功 '
@@ -56,9 +56,9 @@ jobs:
             git branch -M master
             git remote -v
             echo '4'
-            git remote add origin2 git@github.com:levendwindy/RouterFirmware.git
+            git remote add origin git@github.com:levendwindy/RouterFirmware.git
             echo '2'
-            sudo git push -u origin2 master
+            sudo git push -u origin master
             echo '3'
 
         
